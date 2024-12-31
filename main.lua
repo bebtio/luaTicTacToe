@@ -1,6 +1,5 @@
 -- Load global variables
 function love.load()
-    test = love.graphics.newImage("front.jpeg")
 
     gameState = {"","","","","","","","",""}
 
@@ -19,41 +18,43 @@ local isClicked = false
 local wasDownLastFrame = false
 
 function love.update(dt)
-    local isDownNow = love.mouse.isDown(1)
 
-    -- A "new" click is one that wasn't down last frame but is down now
-    if (isDownNow and not wasDownLastFrame) then
-        isClicked = true
-    end
+    if not gameOver then
+        local isDownNow = love.mouse.isDown(1)
 
-    wasDownLastFrame = isDownNow
-
-
-    if isClicked then
-        -- Update the game state and save which player is next.
-        local nextPlayer = ""
-        nextPlayer = updateGameState(bbs,gameState,currentPlayer)
-        isClicked = false
-
-        -- Check that the the current player has not gotten three in a row as of the current move.
-        gameOver = checkIfWon( gameState, playerSymbol[currentPlayer] )
-    
-        -- If the game is over, announce it.
-        if gameOver then
-            print("Player " .. currentPlayer .. " wins!!")
+        -- A "new" click is one that wasn't down last frame but is down now
+        if (isDownNow and not wasDownLastFrame) then
+            isClicked = true
         end
-        
-        -- Otherwise update the currentPlayer to be the nextPlayer.
-        currentPlayer = nextPlayer
-    end
 
+        wasDownLastFrame = isDownNow
+
+
+        if isClicked then
+            -- Update the game state and save which player is next.
+            local nextPlayer = ""
+            nextPlayer = updateGameState(bbs,gameState,currentPlayer)
+            isClicked = false
+
+            -- Check that the the current player has not gotten three in a row as of the current move.
+            gameOver = checkIfWon( gameState, playerSymbol[currentPlayer] )
+    
+            -- If the game is over, announce it.
+            if gameOver then
+                print("Player " .. currentPlayer .. " wins!!")
+            end
+            
+            -- Otherwise update the currentPlayer to be the nextPlayer.
+            currentPlayer = nextPlayer
+        end
+    end
 end
 
 function love.draw()
     if not gameOver then
         tictactoe()
     else
-        print("GAME OVER")
+        handleGameOver()
     end
 end
 
@@ -241,3 +242,8 @@ checkIfWon = function( gameState, playerSymbol )
 
 end
 
+function handleGameOver()
+    local h = love.graphics.getHeight()
+    local w = love.graphics.getWidth()
+    love.graphics.print("GAME OVER",  w/2, h/2)
+end
