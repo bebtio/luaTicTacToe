@@ -6,6 +6,11 @@ function love.load()
 
     currentPlayer = "1"
 
+    playerSymbol = {}
+    playerSymbol["1"] = "x"
+    playerSymbol["2"] = "o"
+
+    gameOver = false
     bbs = getBoundingBoxes()
 end
 
@@ -25,14 +30,31 @@ function love.update(dt)
 
 
     if isClicked then
-        currentPlayer = updateGameState(bbs,gameState,currentPlayer)
+        -- Update the game state and save which player is next.
+        local nextPlayer = ""
+        nextPlayer = updateGameState(bbs,gameState,currentPlayer)
         isClicked = false
+
+        -- Check that the the current player has not gotten three in a row as of the current move.
+        gameOver = checkIfWon( gameState, playerSymbol[currentPlayer] )
+    
+        -- If the game is over, announce it.
+        if gameOver then
+            print("Player " .. currentPlayer .. " wins!!")
+        end
+        
+        -- Otherwise update the currentPlayer to be the nextPlayer.
+        currentPlayer = nextPlayer
     end
 
 end
 
 function love.draw()
-    tictactoe()
+    if not gameOver then
+        tictactoe()
+    else
+        print("GAME OVER")
+    end
 end
 
 function tictactoe()
@@ -56,6 +78,7 @@ function tictactoe()
     for i = 1,9 do
         drawAtBox(bbs[i], gameState[i])
     end
+
 end
 
 getBoundingBoxes = function()
@@ -172,3 +195,49 @@ function updateGameState( boundingBoxes, gameState, currentPlayer )
     
     return currentPlayer
 end
+
+checkIfWon = function( gameState, playerSymbol )
+
+    -- Check horizontal 3 in a rows.
+    if gameState[1] == playerSymbol and
+       gameState[2] == playerSymbol and
+       gameState[3] == playerSymbol or
+       gameState[4] == playerSymbol and
+       gameState[5] == playerSymbol and
+       gameState[6] == playerSymbol or
+       gameState[7] == playerSymbol and
+       gameState[8] == playerSymbol and
+       gameState[9] == playerSymbol then
+
+        return true
+    end
+
+    -- Check vertical three in a rows.
+    if gameState[1] == playerSymbol and
+       gameState[4] == playerSymbol and
+       gameState[7] == playerSymbol or
+       gameState[2] == playerSymbol and
+       gameState[5] == playerSymbol and
+       gameState[8] == playerSymbol or
+       gameState[3] == playerSymbol and
+       gameState[6] == playerSymbol and
+       gameState[9] == playerSymbol then
+
+        return true
+    end
+
+    -- Check diagonal three and a rows.
+    if gameState[1] == playerSymbol and
+       gameState[5] == playerSymbol and
+       gameState[9] == playerSymbol or
+       gameState[3] == playerSymbol and
+       gameState[5] == playerSymbol and
+       gameState[7] == playerSymbol then
+
+        return true
+    end
+
+    return false
+
+end
+
