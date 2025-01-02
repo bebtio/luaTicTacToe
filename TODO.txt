@@ -1,0 +1,3 @@
+1. Add code for ties
+2. Add code for play again.
+3. Add field for keeping text and score and number of games.

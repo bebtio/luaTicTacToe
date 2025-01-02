@@ -1,6 +1,8 @@
 -- Load global variables
-function love.load()
-
+function love.load(arg)
+    if arg[#arg] == "-debug" then require("mobdebug").start() end
+  
+    winningSequence = {}
     gameState = {"","","","","","","","",""}
 
     currentPlayer = "1"
@@ -18,36 +20,7 @@ local isClicked = false
 local wasDownLastFrame = false
 
 function love.update(dt)
-
-    if not gameOver then
-        local isDownNow = love.mouse.isDown(1)
-
-        -- A "new" click is one that wasn't down last frame but is down now
-        if (isDownNow and not wasDownLastFrame) then
-            isClicked = true
-        end
-
-        wasDownLastFrame = isDownNow
-
-
-        if isClicked then
-            -- Update the game state and save which player is next.
-            local nextPlayer = ""
-            nextPlayer = updateGameState(bbs,gameState,currentPlayer)
-            isClicked = false
-
-            -- Check that the the current player has not gotten three in a row as of the current move.
-            gameOver = checkIfWon( gameState, playerSymbol[currentPlayer] )
-    
-            -- If the game is over, announce it.
-            if gameOver then
-                print("Player " .. currentPlayer .. " wins!!")
-            end
-            
-            -- Otherwise update the currentPlayer to be the nextPlayer.
-            currentPlayer = nextPlayer
-        end
-    end
+    handleUpdate()
 end
 
 function love.draw()
@@ -137,11 +110,24 @@ getBoundingBoxes = function()
     return boundingBoxes
 end
 
-function drawCircle( x, y )
+function drawCircle( x, y, color )
+
+    -- Set the color to color or default to white.
+    c = color or {r=1,g=1,b=1}
+    love.graphics.setColor(c.r, c.g, c.b)
+
     love.graphics.circle("line",x,y, 100 )
+
+    -- Reset the the color.
+    love.graphics.setColor(1,1,1)
 end
 
-function drawX( x, y )
+function drawX( x, y, color )
+
+    -- Set the color to color or white.
+    local c = color or {r=1,g=1,b=1}
+    love.graphics.setColor(c.r, c.g, c.b)
+
     local x1 = x - 100
     local y1 = y - 100
     local x2 = x + 100
@@ -149,101 +135,202 @@ function drawX( x, y )
 
     love.graphics.line(x1,y1,x2,y2)
     love.graphics.line(x2,y1,x1,y2)
+
+    -- Reset the color.
+    love.graphics.setColor(1,1,1)
 end
 
-function drawAt( x, y, O_Or_X )
+function drawAt( x, y, O_Or_X, color )
 
+    local c = color or {r=1,g=1,b=1}
     if O_Or_X == "o" then
-        drawCircle(x,y)
+        drawCircle(x, y, c)
     elseif O_Or_X == "x" then
-        drawX(x,y)
+        drawX(x, y, c)
     end
 
 end
 
-function drawAtBox( boundingBox, O_Or_X )
+function drawAtBox( boundingBox, O_Or_X, color )
+
+    local c = color or {r=1,g=1,b=1}
     local x = boundingBox.x1 + ( boundingBox.x2 - boundingBox.x1 ) / 2
     local y = boundingBox.y1 + ( boundingBox.y2 - boundingBox.y1 ) / 2
 
-    drawAt(x,y,O_Or_X)
+    drawAt(x,y,O_Or_X, c)
 
 end
 
-function updateGameState( boundingBoxes, gameState, currentPlayer )
+-- Update the state of the tictactoe board.
+function updateBoardState( boundingBoxes, gameState, currentPlayer )
 
+    -- Update the the state based on which box the user clicked.
     local mx, my = love.mouse.getPosition()
-
 
         for i = 1,9 do
             local bb = boundingBoxes[i]
 
+            -- If the player selection is not picked by any player yet and it is within a bounding
+            -- box update the state.
             if mx > bb.x1 and mx < bb.x2 and
-               my > bb.y1 and my < bb.y2 then
+               my > bb.y1 and my < bb.y2 and
+               gameState[i] == "" then
 
                 if currentPlayer == "1" then
                     gameState[i] = "x" 
                 else 
                     gameState[i] = "o"
                 end
+
+                -- Update the current player.
+                if currentPlayer == "1" then 
+                    currentPlayer = "2"
+                elseif currentPlayer == "2" then
+                    currentPlayer = "1"
+                end
+
             end
         end
 
-        if currentPlayer == "1" then 
-            currentPlayer = "2"
-        elseif currentPlayer == "2" then
-            currentPlayer = "1"
-        end
     
     return currentPlayer
 end
 
 checkIfWon = function( gameState, playerSymbol )
 
+  local winningSequence = {}
+  local won = false
+  
     -- Check horizontal 3 in a rows.
     if gameState[1] == playerSymbol and
        gameState[2] == playerSymbol and
-       gameState[3] == playerSymbol or
-       gameState[4] == playerSymbol and
+       gameState[3] == playerSymbol then
+        winningSequence[#winningSequence+1] = 1
+        winningSequence[#winningSequence+1] = 2
+        winningSequence[#winningSequence+1] = 3
+        won = true
+    end
+    
+    if gameState[4] == playerSymbol and
        gameState[5] == playerSymbol and
-       gameState[6] == playerSymbol or
-       gameState[7] == playerSymbol and
+       gameState[6] == playerSymbol then
+        winningSequence[#winningSequence+1] = 4
+        winningSequence[#winningSequence+1] = 5
+        winningSequence[#winningSequence+1] = 6
+        won = true    
+    end
+    if gameState[7] == playerSymbol and
        gameState[8] == playerSymbol and
        gameState[9] == playerSymbol then
-
-        return true
+        winningSequence[#winningSequence+1] = 7
+        winningSequence[#winningSequence+1] = 8
+        winningSequence[#winningSequence+1] = 9
+        won = true
     end
 
     -- Check vertical three in a rows.
     if gameState[1] == playerSymbol and
        gameState[4] == playerSymbol and
-       gameState[7] == playerSymbol or
-       gameState[2] == playerSymbol and
+       gameState[7] == playerSymbol then
+        winningSequence[#winningSequence+1] = 1
+        winningSequence[#winningSequence+1] = 4
+        winningSequence[#winningSequence+1] = 7
+        won = true
+    end
+    if gameState[2] == playerSymbol and
        gameState[5] == playerSymbol and
-       gameState[8] == playerSymbol or
-       gameState[3] == playerSymbol and
+       gameState[8] == playerSymbol then
+        winningSequence[#winningSequence+1] = 2
+        winningSequence[#winningSequence+1] = 5
+        winningSequence[#winningSequence+1] = 8
+        won = true     
+    end
+    if gameState[3] == playerSymbol and
        gameState[6] == playerSymbol and
        gameState[9] == playerSymbol then
-
-        return true
+        winningSequence[#winningSequence+1] = 3
+        winningSequence[#winningSequence+1] = 6
+        winningSequence[#winningSequence+1] = 9
+        won = true
     end
 
     -- Check diagonal three and a rows.
     if gameState[1] == playerSymbol and
        gameState[5] == playerSymbol and
-       gameState[9] == playerSymbol or
-       gameState[3] == playerSymbol and
+       gameState[9] == playerSymbol then
+        winningSequence[#winningSequence+1] = 1
+        winningSequence[#winningSequence+1] = 5
+        winningSequence[#winningSequence+1] = 9
+        won = true     
+    end
+    
+    if gameState[3] == playerSymbol and
        gameState[5] == playerSymbol and
        gameState[7] == playerSymbol then
-
-        return true
+        winningSequence[#winningSequence+1] = 3
+        winningSequence[#winningSequence+1] = 5
+        winningSequence[#winningSequence+1] = 7
+        won = true
     end
 
-    return false
+    return won, winningSequence
 
+end
+
+-- Update the gameState
+function handleUpdate()
+    if not gameOver then
+        local isDownNow = love.mouse.isDown(1)
+
+        -- A "new" click is one that wasn't down last frame but is down now
+        if (isDownNow and not wasDownLastFrame) then
+            isClicked = true
+        end
+
+        wasDownLastFrame = isDownNow
+
+
+        if isClicked then
+            -- Update the game state and save which player is next.
+            local nextPlayer = ""
+            nextPlayer = updateBoardState(bbs,gameState,currentPlayer)
+            isClicked = false
+
+            -- Check that the the current player has not gotten three in a row as of the current move.
+            gameOver, winningSequence = checkIfWon( gameState, playerSymbol[currentPlayer] )
+    
+            -- If the game is over, announce it.
+            if not gameOver then
+                currentPlayer = nextPlayer
+            end
+            
+        end
+    end
 end
 
 function handleGameOver()
     local h = love.graphics.getHeight()
     local w = love.graphics.getWidth()
     love.graphics.print("GAME OVER",  w/2, h/2)
+    love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", w/2, h/2 +10)
+
+    -- Draw currentPlayer turn.
+    love.graphics.print("Current player: " .. currentPlayer, 0,0)
+
+    -- The two vertical lines.
+    love.graphics.line(w/3  , 0, w/3   ,h)
+    love.graphics.line(2*w/3, 0, 2*w/3, h)
+
+    -- The two horizontal lines.
+    love.graphics.line(0, h/3,   w, h/3)
+    love.graphics.line(0, 2*h/3, w ,2*h/3)
+
+    for i = 1,9 do
+        drawAtBox(bbs[i], gameState[i])
+    end
+
+    color = {r=0,g=1,b=0}
+    for index, value in ipairs(winningSequence) do
+        drawAtBox(bbs[value], gameState[value], color)
+    end
 end
