@@ -12,6 +12,7 @@ function love.load(arg)
     playerSymbol["2"] = "o"
 
     gameOver = false
+    gameTied = false
     bbs = getBoundingBoxes()
 end
 
@@ -299,11 +300,25 @@ function handleUpdate()
             -- Check that the the current player has not gotten three in a row as of the current move.
             gameOver, winningSequence = checkIfWon( gameState, playerSymbol[currentPlayer] )
     
-            -- If the game is over, announce it.
+            local boxesFilled = allBoxesFilled(gameState)                
+            if boxesFilled then
+                gameOver = true
+                gameTied = true
+            end
+
             if not gameOver then
                 currentPlayer = nextPlayer
             end
-            
+        end
+    end
+
+    if gameOver then
+        if love.keyboard.isDown("y") then
+             resetGame()
+        end 
+
+        if love.keyboard.isDown("n") then
+            love.event.quit()
         end
     end
 end
@@ -311,8 +326,17 @@ end
 function handleGameOver()
     local h = love.graphics.getHeight()
     local w = love.graphics.getWidth()
-    love.graphics.print("GAME OVER",  w/2, h/2)
-    love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", w/2, h/2 +10)
+
+    if gameTied then
+        love.graphics.print("TIE GAME",  w/2, h/2)
+        love.graphics.print("Play Again?" , w/2, h/2 +10)
+        love.graphics.print("Y/N" , w/2, h/2 +20)
+    else    
+        love.graphics.print("GAME OVER",  w/2, h/2)
+        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", w/2, h/2 +10)
+        love.graphics.print("Play Again?" , w/2, h/2 +20)
+        love.graphics.print("Y/N" , w/2, h/2 +30)
+    end
 
     -- Draw currentPlayer turn.
     love.graphics.print("Current player: " .. currentPlayer, 0,0)
@@ -333,4 +357,32 @@ function handleGameOver()
     for index, value in ipairs(winningSequence) do
         drawAtBox(bbs[value], gameState[value], color)
     end
+end
+
+
+-- Checks the gameState
+function allBoxesFilled( gameState )
+    for _, value in ipairs(gameState) do
+        if value == "" then
+            return false
+        end
+    end
+
+    return true
+end
+
+function resetGame()
+
+    winningSequence = {}
+    gameState = {"","","","","","","","",""}
+
+    currentPlayer = "1"
+
+    playerSymbol = {}
+    playerSymbol["1"] = "x"
+    playerSymbol["2"] = "o"
+
+    gameOver = false
+    gameTied = false
+
 end
