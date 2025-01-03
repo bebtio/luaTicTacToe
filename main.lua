@@ -13,7 +13,10 @@ function love.load(arg)
 
     gameOver = false
     gameTied = false
-    bbs = getBoundingBoxes()
+
+    gh = love.graphics.getHeight()
+    gw = love.graphics.getWidth()
+    bbs = getBoundingBoxes(gh,gw)
 end
 
 
@@ -33,33 +36,13 @@ function love.draw()
 end
 
 function tictactoe()
-
-    
-    local h = love.graphics.getHeight()
-    local w = love.graphics.getWidth()
-
-    -- Draw currentPlayer turn.
-    love.graphics.print("Current player: " .. currentPlayer, 0,0)
-
-    -- The two vertical lines.
-    love.graphics.line(w/3  , 0, w/3   ,h)
-    love.graphics.line(2*w/3, 0, 2*w/3, h)
-
-    -- The two horizontal lines.
-    love.graphics.line(0, h/3,   w, h/3)
-    love.graphics.line(0, 2*h/3, w ,2*h/3)
-
-    -- Iterate over the game state and draw a circle or X depending on the state.
-    for i = 1,9 do
-        drawAtBox(bbs[i], gameState[i])
-    end
-
+    drawGameScreen(gh,gw)
 end
 
-getBoundingBoxes = function()
+getBoundingBoxes = function(h,w)
 
-    local h = love.graphics.getHeight()
-    local w = love.graphics.getWidth()
+    local h = h or love.graphics.getHeight()
+    local w = w or love.graphics.getWidth()
 
     local bb1 = {
                     x1 = 0  , y1 = 0 ,
@@ -324,33 +307,18 @@ function handleUpdate()
 end
 
 function handleGameOver()
-    local h = love.graphics.getHeight()
-    local w = love.graphics.getWidth()
+
+    drawGameScreen(gh,gw)
 
     if gameTied then
-        love.graphics.print("TIE GAME",  w/2, h/2)
-        love.graphics.print("Play Again?" , w/2, h/2 +10)
-        love.graphics.print("Y/N" , w/2, h/2 +20)
+        love.graphics.print("TIE GAME",  gw/2, gh/2)
+        love.graphics.print("Play Again?" , gw/2, gh/2 +10)
+        love.graphics.print("Y/N" , gw/2, gh/2 +20)
     else    
-        love.graphics.print("GAME OVER",  w/2, h/2)
-        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", w/2, h/2 +10)
-        love.graphics.print("Play Again?" , w/2, h/2 +20)
-        love.graphics.print("Y/N" , w/2, h/2 +30)
-    end
-
-    -- Draw currentPlayer turn.
-    love.graphics.print("Current player: " .. currentPlayer, 0,0)
-
-    -- The two vertical lines.
-    love.graphics.line(w/3  , 0, w/3   ,h)
-    love.graphics.line(2*w/3, 0, 2*w/3, h)
-
-    -- The two horizontal lines.
-    love.graphics.line(0, h/3,   w, h/3)
-    love.graphics.line(0, 2*h/3, w ,2*h/3)
-
-    for i = 1,9 do
-        drawAtBox(bbs[i], gameState[i])
+        love.graphics.print("GAME OVER",  gw/2, gh/2)
+        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", gw/2, gh/2 +10)
+        love.graphics.print("Play Again?" , gw/2, gh/2 +20)
+        love.graphics.print("Y/N" , gw/2, gh/2 +30)
     end
 
     color = {r=0,g=1,b=0}
@@ -385,4 +353,25 @@ function resetGame()
     gameOver = false
     gameTied = false
 
+end
+
+function drawGameScreen( h, w )
+    local h = h or love.graphics.getHeight()
+    local w = w or love.graphics.getWidth()
+
+    -- Draw currentPlayer turn.
+    love.graphics.print("Current player: " .. currentPlayer, 0,0)
+
+    -- The two vertical lines.
+    love.graphics.line(w/3  , 0, w/3   ,h)
+    love.graphics.line(2*w/3, 0, 2*w/3, h)
+
+    -- The two horizontal lines.
+    love.graphics.line(0, h/3,   w, h/3)
+    love.graphics.line(0, 2*h/3, w ,2*h/3)
+
+    -- Iterate over the game state and draw a circle or X depending on the state.
+    for i = 1,9 do
+        drawAtBox(bbs[i], gameState[i])
+    end
 end
