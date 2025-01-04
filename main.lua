@@ -41,16 +41,16 @@ function love.update(dt)
 end
 
 function love.draw()
-    if not gameOver then
         tictactoe()
-    else
-        handleGameOver()
-    end
 end
 
 function tictactoe()
     drawStatusScreen( sh, sw, 0,0)
     drawGameScreen(gh,gw, ghOffset, gwOffset)
+
+    if gameOver then
+        drawGameOver()
+    end
 end
 
 getBoundingBoxes = function(h,w, hOffset, wOffset)
@@ -341,20 +341,16 @@ function handleUpdate()
     end
 end
 
-function handleGameOver()
-
-    drawStatusScreen(sh,sw,0,0)
-    drawGameScreen(gh,gw, ghOffset, gwOffset)
-
+function drawGameOver()
     if gameTied then
-        love.graphics.print("TIE GAME",  gw/2, gh/2)
-        love.graphics.print("Play Again?" , gw/2, gh/2 +10)
-        love.graphics.print("Y/N" , gw/2, gh/2 +20)
+        love.graphics.print("TIE GAME"                                  , gw/2, sh - 35)
+        love.graphics.print("Play Again?"                               , gw/2, sh - 25)
+        love.graphics.print("Y/N"                                       , gw/2, sh - 15)
     else    
-        love.graphics.print("GAME OVER",  gw/2, gh/2)
-        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", gw/2, gh/2 +10)
-        love.graphics.print("Play Again?" , gw/2, gh/2 +20)
-        love.graphics.print("Y/N" , gw/2, gh/2 +30)
+        love.graphics.print("GAME OVER"                                 , gw/2, sh - 45)
+        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", gw/2, sh - 35)
+        love.graphics.print("Play Again?"                               , gw/2, sh - 25)
+        love.graphics.print("y/n"                                       , gw/2, sh - 15)
     end
 
     color = {r=0,g=1,b=0}
