@@ -14,9 +14,17 @@ function love.load(arg)
     gameOver = false
     gameTied = false
 
-    gh = love.graphics.getHeight()
+    -- Create the game window height and width.
+    ghOffset = love.graphics.getHeight()*.1
+    gwOffset = 0
+    gh = love.graphics.getHeight()*.9
     gw = love.graphics.getWidth()
-    bbs = getBoundingBoxes(gh,gw)
+
+    -- Create the game status bar height and width.
+    sh = love.graphics.getHeight()*.1
+    sw = gw
+
+    bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
 end
 
 
@@ -36,57 +44,59 @@ function love.draw()
 end
 
 function tictactoe()
-    drawGameScreen(gh,gw)
+    drawGameScreen(gh,gw, ghOffset, gwOffset)
 end
 
-getBoundingBoxes = function(h,w)
+getBoundingBoxes = function(h,w, hOffset, wOffset)
 
     local h = h or love.graphics.getHeight()
     local w = w or love.graphics.getWidth()
+    local hOffset = hOffset or 0
+    local wOffset = wOffset or 0
 
     local bb1 = {
-                    x1 = 0  , y1 = 0 ,
-                    x2 = w/3, y2 = h/3
+                    x1 = 0   + wOffset, y1 = 0   + hOffset,
+                    x2 = w/3 + wOffset, y2 = h/3 + hOffset
                 }
 
     local bb2 = {
-                    x1 = w/3  , y1 = 0 ,
-                    x2 = 2*w/3, y2 = h/3
+                    x1 = w/3   + wOffset, y1 = 0   + hOffset,
+                    x2 = 2*w/3 + wOffset, y2 = h/3 + hOffset
                 }
 
     local bb3 = {
-                    x1 = 2*w/3, y1 = 0,
-                    x2 = w    , y2 = h/3
+                    x1 = 2*w/3 + wOffset, y1 = 0   + hOffset,
+                    x2 = w     + wOffset, y2 = h/3 + hOffset
             }
 
     local bb4 = {
-                    x1 = 0  , y1 = h/3,
-                    x2 = w/3, y2 = 2*h/3
+                    x1 = 0   + wOffset, y1 = h/3   + hOffset,
+                    x2 = w/3 + wOffset, y2 = 2*h/3 + hOffset
                 }
 
     local bb5 = {
-                    x1 = w/3  , y1 = h/3,
-                    x2 = 2*w/3, y2 = 2*h/3
+                    x1 = w/3   + wOffset, y1 = h/3   + hOffset,
+                    x2 = 2*w/3 + wOffset, y2 = 2*h/3 + hOffset
                 }
 
     local bb6 = {
-                    x1 = 2*w/3, y1 = h/3,
-                    x2 = w    , y2 = 2*h/3
+                    x1 = 2*w/3 + wOffset, y1 = h/3   + hOffset,
+                    x2 = w     + wOffset, y2 = 2*h/3 + hOffset
                 }
 
     local bb7 = {
-                    x1 = 0  , y1 = 2*h/3,
-                    x2 = w/3, y2 = h
+                    x1 = 0   + wOffset, y1 = 2*h/3 + hOffset,
+                    x2 = w/3 + wOffset, y2 = h     + hOffset
                 }
 
     local bb8 = {
-                    x1 = w/3  , y1 = 2*h/3,
-                    x2 = 2*w/3, y2 = h
+                    x1 = w/3   + wOffset, y1 = 2*h/3 + hOffset,
+                    x2 = 2*w/3 + wOffset, y2 = h     + hOffset  
                 }
 
     local bb9 = {
-                    x1 = 2*w/3, y1 = 2*h/3,
-                    x2 = w    , y2 = h
+                    x1 = 2*w/3 + wOffset, y1 = 2*h/3 + hOffset,
+                    x2 = w     + wOffset, y2 = h     + hOffset 
                 }
 
     local boundingBoxes = {bb1,bb2,bb3,bb4,bb5,bb6,bb7,bb8,bb9}
@@ -94,28 +104,63 @@ getBoundingBoxes = function(h,w)
     return boundingBoxes
 end
 
-function drawCircle( x, y, color )
+-- Draw an X or an O at the clicked bounding box.
+function drawAtBox( boundingBox, O_Or_X, color )
+
+    local c = color or {r=1,g=1,b=1}
+    local x = boundingBox.x1 + ( boundingBox.x2 - boundingBox.x1 ) / 2
+    local y = boundingBox.y1 + ( boundingBox.y2 - boundingBox.y1 ) / 2
+
+    -- We want the side length/radius to be the smallest dimension
+    -- so it fits nicely in the box.
+    local sideLengthX = (boundingBox.x2 - boundingBox.x1) / 2 
+    local sideLengthY = (boundingBox.y2 - boundingBox.y1) / 2 
+
+    local sideLength = sideLengthX
+
+    if sideLengthX > sideLengthY then
+        sideLength = sideLengthY
+    end
+
+    
+    drawAt(x,y,O_Or_X, c, sideLength)
+
+end
+
+-- Draw an X or O or size sizeLength at coordinates (x,y).
+function drawAt( x, y, O_Or_X, color, sideLength )
+
+    local c = color or {r=1,g=1,b=1}
+    if O_Or_X == "o" then
+        drawCircle(x, y, c, sideLength)
+    elseif O_Or_X == "x" then
+        drawX(x, y, c, sideLength)
+    end
+
+end
+
+function drawCircle( x, y, color, radius )
 
     -- Set the color to color or default to white.
     c = color or {r=1,g=1,b=1}
     love.graphics.setColor(c.r, c.g, c.b)
 
-    love.graphics.circle("line",x,y, 100 )
+    love.graphics.circle("line",x,y, radius )
 
     -- Reset the the color.
     love.graphics.setColor(1,1,1)
 end
 
-function drawX( x, y, color )
+function drawX( x, y, color, sideLength )
 
     -- Set the color to color or white.
     local c = color or {r=1,g=1,b=1}
     love.graphics.setColor(c.r, c.g, c.b)
 
-    local x1 = x - 100
-    local y1 = y - 100
-    local x2 = x + 100
-    local y2 = y + 100
+    local x1 = x - sideLength
+    local y1 = y - sideLength
+    local x2 = x + sideLength
+    local y2 = y + sideLength
 
     love.graphics.line(x1,y1,x2,y2)
     love.graphics.line(x2,y1,x1,y2)
@@ -124,26 +169,7 @@ function drawX( x, y, color )
     love.graphics.setColor(1,1,1)
 end
 
-function drawAt( x, y, O_Or_X, color )
 
-    local c = color or {r=1,g=1,b=1}
-    if O_Or_X == "o" then
-        drawCircle(x, y, c)
-    elseif O_Or_X == "x" then
-        drawX(x, y, c)
-    end
-
-end
-
-function drawAtBox( boundingBox, O_Or_X, color )
-
-    local c = color or {r=1,g=1,b=1}
-    local x = boundingBox.x1 + ( boundingBox.x2 - boundingBox.x1 ) / 2
-    local y = boundingBox.y1 + ( boundingBox.y2 - boundingBox.y1 ) / 2
-
-    drawAt(x,y,O_Or_X, c)
-
-end
 
 -- Update the state of the tictactoe board.
 function updateBoardState( boundingBoxes, gameState, currentPlayer )
@@ -308,7 +334,7 @@ end
 
 function handleGameOver()
 
-    drawGameScreen(gh,gw)
+    drawGameScreen(gh,gw, ghOffset, gwOffset)
 
     if gameTied then
         love.graphics.print("TIE GAME",  gw/2, gh/2)
@@ -355,20 +381,23 @@ function resetGame()
 
 end
 
-function drawGameScreen( h, w )
+function drawGameScreen( h, w, ghOffset, gwOffset )
+
     local h = h or love.graphics.getHeight()
     local w = w or love.graphics.getWidth()
+    local hOffset = ghOffset or 0
+    local wOffset = gwOffset or 0 
 
     -- Draw currentPlayer turn.
     love.graphics.print("Current player: " .. currentPlayer, 0,0)
 
     -- The two vertical lines.
-    love.graphics.line(w/3  , 0, w/3   ,h)
-    love.graphics.line(2*w/3, 0, 2*w/3, h)
+    love.graphics.line(w/3   + wOffset, 0     + hOffset, w/3  , h     + hOffset)
+    love.graphics.line(2*w/3 + wOffset, 0     + hOffset, 2*w/3, h     + hOffset)
 
     -- The two horizontal lines.
-    love.graphics.line(0, h/3,   w, h/3)
-    love.graphics.line(0, 2*h/3, w ,2*h/3)
+    love.graphics.line(0     + wOffset, h/3   + hOffset, w,     h/3   + hOffset)
+    love.graphics.line(0     + wOffset, 2*h/3 + hOffset, w,     2*h/3 + hOffset)
 
     -- Iterate over the game state and draw a circle or X depending on the state.
     for i = 1,9 do
