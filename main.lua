@@ -2,6 +2,8 @@
 function love.load(arg)
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
+    playerScore = {["1"] = 0, ["2"] = 0}
+
     winningSequence = {}
     gameState = {"","","","","","","","",""}
 
@@ -15,13 +17,16 @@ function love.load(arg)
     gameTied = false
 
     -- Create the game window height and width.
-    ghOffset = love.graphics.getHeight()*.1
+    local windowRatio = .80 -- The ratio of screen space the game window takes up version compared to the status bar.
+
+    ghOffset = love.graphics.getHeight() * (1-windowRatio)
     gwOffset = 0
-    gh = love.graphics.getHeight()*.9
+
+    gh = love.graphics.getHeight() * windowRatio
     gw = love.graphics.getWidth()
 
     -- Create the game status bar height and width.
-    sh = love.graphics.getHeight()*.1
+    sh = love.graphics.getHeight() * (1-windowRatio) 
     sw = gw
 
     bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
@@ -44,6 +49,7 @@ function love.draw()
 end
 
 function tictactoe()
+    drawStatusScreen( sh, sw, 0,0)
     drawGameScreen(gh,gw, ghOffset, gwOffset)
 end
 
@@ -315,6 +321,9 @@ function handleUpdate()
                 gameTied = true
             end
 
+            if gameOver and not gameTied then
+                playerScore[currentPlayer] = playerScore[currentPlayer] + 1
+            end
             if not gameOver then
                 currentPlayer = nextPlayer
             end
@@ -334,6 +343,7 @@ end
 
 function handleGameOver()
 
+    drawStatusScreen(sh,sw,0,0)
     drawGameScreen(gh,gw, ghOffset, gwOffset)
 
     if gameTied then
@@ -370,7 +380,11 @@ function resetGame()
     winningSequence = {}
     gameState = {"","","","","","","","",""}
 
-    currentPlayer = "1"
+    if currentPlayer == "1" then
+        currentPlayer = "2"
+    else
+        currentPlayer = "1"
+    end
 
     playerSymbol = {}
     playerSymbol["1"] = "x"
@@ -381,6 +395,16 @@ function resetGame()
 
 end
 
+function drawStatusScreen( h, w, ghOffset, gwOffset )
+    -- Draw currentPlayer turn.
+    love.graphics.print("Current player: " .. currentPlayer .. " (" .. playerSymbol[currentPlayer] .. ")", 0,0)
+
+    love.graphics.print("Player 1 Score: " .. playerScore["1"], 0, 85 )
+    love.graphics.print("Player 2 Score: " .. playerScore["2"], 0, 100 )
+    love.graphics.line(0,h,w,h)
+
+end
+
 function drawGameScreen( h, w, ghOffset, gwOffset )
 
     local h = h or love.graphics.getHeight()
@@ -388,8 +412,6 @@ function drawGameScreen( h, w, ghOffset, gwOffset )
     local hOffset = ghOffset or 0
     local wOffset = gwOffset or 0 
 
-    -- Draw currentPlayer turn.
-    love.graphics.print("Current player: " .. currentPlayer, 0,0)
 
     -- The two vertical lines.
     love.graphics.line(w/3   + wOffset, 0     + hOffset, w/3  , h     + hOffset)
