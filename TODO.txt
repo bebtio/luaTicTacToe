@@ -1,3 +1,0 @@
-- [x] Add code for ties
-- [x] Add code for play again.
-- [ ] Add field for keeping text and score and number of games.
