@@ -4,7 +4,7 @@ function drawPngAtBox( O_Or_X, playerImages, boundingBox )
     local y = boundingBox.y1 + ( boundingBox.y2 - boundingBox.y1 ) / 2
 
     if( O_Or_X ~= "" ) then
-        love.graphics.draw(playerImages[O_Or_X],x,y, 0,5,5, 16,16) 
+        love.graphics.draw(playerImages[O_Or_X],x,y, 0,4.8,4.8, 16,16) 
     end
 end
 
@@ -28,7 +28,7 @@ function drawGameOver(gameDimensions, gameState)
     color = {r=0,g=1,b=0}
     for index, value in ipairs(gameState.winningSequence) do
         --drawAtBox(bbs[value], gameState.boardState[value], color)
-        drawPngAtBox(gameState.boardState[value], gameState.playerImage, bbs[value])
+        drawPngAtBox(gameState.boardState[value], gameState.playerImages.highlightedImage, bbs[value])
     end
 end
 
@@ -65,7 +65,7 @@ function drawGameScreen( gameDimensions, gameState )
     -- Iterate over the game state and draw a circle or X depending on the state.
     for i = 1,9 do
         --drawAtBox(gameDimensions.bbs[i], gameState.boardState[i])
-        drawPngAtBox(gameState.boardState[i], gameState.playerImage, gameDimensions.bbs[i])
+        drawPngAtBox(gameState.boardState[i], gameState.playerImages.image, gameDimensions.bbs[i])
     end
 end
 

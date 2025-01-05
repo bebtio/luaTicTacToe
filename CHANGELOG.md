@@ -5,9 +5,14 @@
  - [x] Make cursor an X or O depending on current players turn.: 1.1.0
  - [x] Custom X symbol : 1.2.0
  - [x] Custom O symbol : 1.2.0
+ - [x] Highlight X and O when a win occurs.
  - [ ] Custom boxes
  - [ ] Floating background
  - [ ] Animate the X and O?
+
+### [1.3.0] 2024-01-05
+
+- Added highlights to X and O for the winner.
 
 ### [1.2.0] 2024-01-05
 

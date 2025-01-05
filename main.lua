@@ -30,6 +30,14 @@ function love.load(arg)
 
     local oImage  = love.graphics.newImage("sprites/blueO.png")
     local xImage  = love.graphics.newImage("sprites/pinkX.png")
+
+    local oImageHighlighted  = love.graphics.newImage("sprites/blueOHighlighted.png")
+    local xImageHighlighted  = love.graphics.newImage("sprites/pinkXHighlighted.png")
+
+    local playerImages = {
+        image  = {["x"] = xImage,  ["o"] = oImage},
+        highlightedImage = {["x"] = xImageHighlighted, ["o"] = oImageHighlighted}
+    }
     gameState =
     {
         -- Tracks the score of the current player.
@@ -41,7 +49,7 @@ function love.load(arg)
         -- Tracks which player is associated with which symbol.
         playerSymbol = {["1"] = "x",     ["2"] = "o"},
         playerCursor = {["1"] = xCursor, ["2"] = oCursor},
-        playerImage  = {["x"] = xImage,  ["o"] = oImage},
+        playerImages = playerImages,
 
         -- Tracks the winning sequence indices so we can highlight it in a different color.
         winningSequence = {},
