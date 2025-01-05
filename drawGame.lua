@@ -122,3 +122,7 @@ function drawGameScreen( gameDimensions, gameState )
         drawAtBox(gameDimensions.bbs[i], gameState.boardState[i])
     end
 end
+
+function updateCursor(gameState)
+        love.mouse.setCursor(gameState.playerCursor[gameState.currentPlayer])
+end

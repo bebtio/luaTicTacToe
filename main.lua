@@ -25,6 +25,9 @@ function love.load(arg)
     -- Compute the bounding boxes for each grid element.
     local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
 
+    local oCursor = love.mouse.newCursor("sprites/blueO.png",16,16)
+    local xCursor = love.mouse.newCursor("sprites/pinkX.png",16,16)
+
     gameState =
     {
         -- Tracks the score of the current player.
@@ -35,6 +38,7 @@ function love.load(arg)
 
         -- Tracks which player is associated with which symbol.
         playerSymbol = {["1"] = "x", ["2"] = "o"},
+        playerCursor = {["1"] = xCursor, ["2"] = oCursor},
 
         -- Tracks the winning sequence indices so we can highlight it in a different color.
         winningSequence = {},
@@ -62,6 +66,8 @@ function love.load(arg)
         sw = sw
     }
 
+    cursor = love.mouse.newCursor("sprites/blueO.png",0,0)
+    love.mouse.setCursor(cursor)
 end
 
 
@@ -74,6 +80,7 @@ function love.draw()
 end
 
 function tictactoe()
+    updateCursor(gameState)
     drawStatusScreen(gameDimensions, gameState)
     drawGameScreen(gameDimensions, gameState)
 

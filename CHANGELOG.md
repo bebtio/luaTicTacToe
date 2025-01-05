@@ -6,6 +6,12 @@
  - [ ] Custom X symbol
  - [ ] Custom O symbol
  - [ ] Custom boxes
+ - [x] Make cursor an X or O depending on current players turn.
+
+### [1.1.0] 2024-01-04
+
+- Made a custom pink X and blue O for the mouse cursor depending on the user.
+- Added sprites folder.
 
 ### [1.0.2] 2024-01-04
 
