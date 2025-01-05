@@ -2,11 +2,16 @@
 ### TODO
 
 - [ ] Add custom art!
- - [ ] Floating background
- - [ ] Custom X symbol
- - [ ] Custom O symbol
+ - [x] Make cursor an X or O depending on current players turn.: 1.1.0
+ - [x] Custom X symbol : 1.2.0
+ - [x] Custom O symbol : 1.2.0
  - [ ] Custom boxes
- - [x] Make cursor an X or O depending on current players turn.
+ - [ ] Floating background
+ - [ ] Animate the X and O?
+
+### [1.2.0] 2024-01-05
+
+- Made is so that the custom O's and X' now appear in the tictactoe grid when clicked.
 
 ### [1.1.0] 2024-01-04
 

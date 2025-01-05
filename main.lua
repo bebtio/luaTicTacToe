@@ -1,12 +1,12 @@
 require("gameState")
 require("drawGame")
-
 local gameState
 local gameDimensions
 
 function love.load(arg)
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
+    love.graphics.setDefaultFilter("nearest","nearest")
     
     -- Create the game window height and width.
     local windowRatio = .80 -- The ratio of screen space the game window takes up version compared to the status bar.
@@ -28,6 +28,8 @@ function love.load(arg)
     local oCursor = love.mouse.newCursor("sprites/blueO.png",16,16)
     local xCursor = love.mouse.newCursor("sprites/pinkX.png",16,16)
 
+    local oImage  = love.graphics.newImage("sprites/blueO.png")
+    local xImage  = love.graphics.newImage("sprites/pinkX.png")
     gameState =
     {
         -- Tracks the score of the current player.
@@ -37,8 +39,9 @@ function love.load(arg)
         boardState = {"","","","","","","","",""},
 
         -- Tracks which player is associated with which symbol.
-        playerSymbol = {["1"] = "x", ["2"] = "o"},
+        playerSymbol = {["1"] = "x",     ["2"] = "o"},
         playerCursor = {["1"] = xCursor, ["2"] = oCursor},
+        playerImage  = {["x"] = xImage,  ["o"] = oImage},
 
         -- Tracks the winning sequence indices so we can highlight it in a different color.
         winningSequence = {},
@@ -66,8 +69,6 @@ function love.load(arg)
         sw = sw
     }
 
-    cursor = love.mouse.newCursor("sprites/blueO.png",0,0)
-    love.mouse.setCursor(cursor)
 end
 
 
