@@ -1,13 +1,17 @@
 
 function drawPngAtBox( O_Or_X, playerImages, boundingBox )
 
-    -- Compute the height and width of the bounding box.
-    local xSize = ( boundingBox.x2 - boundingBox.x1 ) / 2
-    local ySize = ( boundingBox.y2 - boundingBox.y1 ) / 2
+    -- Compute the width and height of the bounding box.
+    local xSize = ( boundingBox.x2 - boundingBox.x1 ) 
+    local ySize = ( boundingBox.y2 - boundingBox.y1 ) 
 
-    -- Compute the position of the bounding box.
-    local x = boundingBox.x1 + xSize
-    local y = boundingBox.y1 + ySize
+    -- Compute the midpoint of the bounding box.
+    local xMid  = xSize / 2
+    local yMid  = ySize / 2
+
+    -- Compute the midpoint position of the bounding box on the screen.
+    local x = boundingBox.x1 + xMid
+    local y = boundingBox.y1 + yMid
 
 
     -- Compute the side length of the X or O.
@@ -24,17 +28,23 @@ function drawPngAtBox( O_Or_X, playerImages, boundingBox )
         -- Scale the original image size so it fits fills the boundingBox.
         local image = playerImages[O_Or_X]
 
-        -- Cut the width in half so the image will fill the bounding box from the center.
-        local w = image:getWidth()  / 2
-        local h = image:getHeight() / 2
+        -- Get dimensions of the image.
+        local w = image:getWidth() 
+        local h = image:getHeight()
 
+        -- Generate the width and height offset of the image so that it is in the center of the 
+        -- bounding box.
+        local xOffset = w / 2
+        local yOffset = h / 2
+
+        -- Compute the scale factor required to fit the image in the bounding box.
         -- Shrink the scale factor a little so the shapes are not touching the border of
         -- the bounding box.
         local twiddleFactor = 0.90
         local wScale = (sideLength / w) * twiddleFactor
         local hScale = (sideLength / h) * twiddleFactor
 
-        love.graphics.draw(playerImages[O_Or_X],x,y, 0, wScale, hScale, w, h) 
+        love.graphics.draw(playerImages[O_Or_X],x,y, 0, wScale, hScale, xOffset, yOffset) 
     end
 end
 
