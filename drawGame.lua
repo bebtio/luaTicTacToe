@@ -1,10 +1,40 @@
 
 function drawPngAtBox( O_Or_X, playerImages, boundingBox )
-    local x = boundingBox.x1 + ( boundingBox.x2 - boundingBox.x1 ) / 2
-    local y = boundingBox.y1 + ( boundingBox.y2 - boundingBox.y1 ) / 2
+
+    -- Compute the height and width of the bounding box.
+    local xSize = ( boundingBox.x2 - boundingBox.x1 ) / 2
+    local ySize = ( boundingBox.y2 - boundingBox.y1 ) / 2
+
+    -- Compute the position of the bounding box.
+    local x = boundingBox.x1 + xSize
+    local y = boundingBox.y1 + ySize
+
+
+    -- Compute the side length of the X or O.
+    local sideLength = xSize
+
+    -- We want to be the smallest dimension of the boundingBox so it
+    -- fits nicely within it.
+    if ySize < sideLength then
+        sideLength = ySize
+    end
 
     if( O_Or_X ~= "" ) then
-        love.graphics.draw(playerImages[O_Or_X],x,y, 0,4.8,4.8, 16,16) 
+
+        -- Scale the original image size so it fits fills the boundingBox.
+        local image = playerImages[O_Or_X]
+
+        -- Cut the width in half so the image will fill the bounding box from the center.
+        local w = image:getWidth()  / 2
+        local h = image:getHeight() / 2
+
+        -- Shrink the scale factor a little so the shapes are not touching the border of
+        -- the bounding box.
+        local twiddleFactor = 0.90
+        local wScale = (sideLength / w) * twiddleFactor
+        local hScale = (sideLength / h) * twiddleFactor
+
+        love.graphics.draw(playerImages[O_Or_X],x,y, 0, wScale, hScale, w, h) 
     end
 end
 

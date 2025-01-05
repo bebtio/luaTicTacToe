@@ -10,6 +10,11 @@
  - [ ] Floating background
  - [ ] Animate the X and O?
 
+### [1.3.1] 2024-01-05
+
+- Made it so the drawPngAtBox function draws X's and O's dynamically depending on the size
+  of the bounding box.
+
 ### [1.3.0] 2024-01-05
 
 - Added highlights to X and O for the winner.
