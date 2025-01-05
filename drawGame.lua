@@ -64,40 +64,49 @@ function drawX( x, y, color, sideLength )
     love.graphics.setColor(1,1,1)
 end
 
-function drawGameOver()
-    if gameTied then
+function drawGameOver(gameDimensions, gameState)
+
+    local bbs = gameDimensions.bbs
+
+    local sh  = gameDimensions.sh
+    local gw  = gameDimensions.gw
+    if gameState.gameTied then
         love.graphics.print("TIE GAME"                                  , gw/2, sh - 35)
         love.graphics.print("Play Again?"                               , gw/2, sh - 25)
         love.graphics.print("Y/N"                                       , gw/2, sh - 15)
     else    
         love.graphics.print("GAME OVER"                                 , gw/2, sh - 45)
-        love.graphics.print("Player" .. " " .. currentPlayer .. " wins!", gw/2, sh - 35)
+        love.graphics.print("Player" .. " " .. gameState.currentPlayer .. " wins!", gw/2, sh - 35)
         love.graphics.print("Play Again?"                               , gw/2, sh - 25)
         love.graphics.print("y/n"                                       , gw/2, sh - 15)
     end
 
     color = {r=0,g=1,b=0}
-    for index, value in ipairs(winningSequence) do
-        drawAtBox(bbs[value], gameState[value], color)
+    for index, value in ipairs(gameState.winningSequence) do
+        drawAtBox(bbs[value], gameState.boardState[value], color)
     end
 end
 
-function drawStatusScreen( h, w, ghOffset, gwOffset )
-    -- Draw currentPlayer turn.
-    love.graphics.print("Current player: " .. currentPlayer .. " (" .. playerSymbol[currentPlayer] .. ")", 0,0)
+function drawStatusScreen( gameDimensions, gameState )
 
-    love.graphics.print("Player 1 Score: " .. playerScore["1"], 0, 85 )
-    love.graphics.print("Player 2 Score: " .. playerScore["2"], 0, 100 )
+    local h = gameDimensions.sh
+    local w = gameDimensions.sw
+
+    -- Draw currentPlayer turn.
+    love.graphics.print("Current player: " .. gameState.currentPlayer .. " (" .. gameState.playerSymbol[gameState.currentPlayer] .. ")", 0,0)
+
+    love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], 0, 85 )
+    love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], 0, 100 )
     love.graphics.line(0,h,w,h)
 
 end
 
-function drawGameScreen( h, w, ghOffset, gwOffset )
+function drawGameScreen( gameDimensions, gameState )
 
-    local h = h or love.graphics.getHeight()
-    local w = w or love.graphics.getWidth()
-    local hOffset = ghOffset or 0
-    local wOffset = gwOffset or 0 
+    local h = gameDimensions.gh or love.graphics.getHeight()
+    local w = gameDimensions.gw or love.graphics.getWidth()
+    local hOffset = gameDimensions.ghOffset or 0
+    local wOffset = gameDimensions.gwOffset or 0 
 
 
     -- The two vertical lines.
@@ -110,6 +119,6 @@ function drawGameScreen( h, w, ghOffset, gwOffset )
 
     -- Iterate over the game state and draw a circle or X depending on the state.
     for i = 1,9 do
-        drawAtBox(bbs[i], gameState[i])
+        drawAtBox(gameDimensions.bbs[i], gameState.boardState[i])
     end
 end

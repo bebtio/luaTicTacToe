@@ -1,44 +1,72 @@
 require("gameState")
 require("drawGame")
 
--- Load global variables
+local gameState
+local gameDimensions
+
 function love.load(arg)
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
-    playerScore = {["1"] = 0, ["2"] = 0}
-
-    winningSequence = {}
-    gameState = {"","","","","","","","",""}
-
-    currentPlayer = "1"
-
-    playerSymbol = {}
-    playerSymbol["1"] = "x"
-    playerSymbol["2"] = "o"
-
-    gameOver = false
-    gameTied = false
-
+    
     -- Create the game window height and width.
     local windowRatio = .80 -- The ratio of screen space the game window takes up version compared to the status bar.
 
-    ghOffset = love.graphics.getHeight() * (1-windowRatio)
-    gwOffset = 0
+    local ghOffset = love.graphics.getHeight() * (1-windowRatio)
+    local gwOffset = 0
 
-    gh = love.graphics.getHeight() * windowRatio
-    gw = love.graphics.getWidth()
+    -- Create the gameBoard dimensions.
+    local gh = love.graphics.getHeight() * windowRatio
+    local gw = love.graphics.getWidth()
 
     -- Create the game status bar height and width.
-    sh = love.graphics.getHeight() * (1-windowRatio) 
-    sw = gw
+    local sh = love.graphics.getHeight() * (1-windowRatio)
+    local sw = love.graphics.getWidth()
 
-    bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
+    -- Compute the bounding boxes for each grid element.
+    local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
+
+    gameState =
+    {
+        -- Tracks the score of the current player.
+        playerScore = {["1"] = 0, ["2"] = 0},
+
+        -- Tracks which grid has an X or O character.
+        boardState = {"","","","","","","","",""},
+
+        -- Tracks which player is associated with which symbol.
+        playerSymbol = {["1"] = "x", ["2"] = "o"},
+
+        -- Tracks the winning sequence indices so we can highlight it in a different color.
+        winningSequence = {},
+
+        -- Tracks the current player.
+        currentPlayer = "1",
+
+        gameOver = false,
+        gameTied = false,
+    }
+
+    gameDimensions = 
+    {
+        -- Bounding boxes that define the clickable grids.
+        bbs = bbs,
+
+        -- The board game height and width and offsets.
+        gh = gh,
+        gw = gw,
+        ghOffset = ghOffset,
+        gwOffset = gwOffset,
+
+        -- That top status bar height and width.
+        sh = sh,
+        sw = sw
+    }
+
 end
 
 
-
 function love.update(dt)
-    handleUpdate()
+    handleUpdate(gameDimensions, gameState)
 end
 
 function love.draw()
@@ -46,10 +74,10 @@ function love.draw()
 end
 
 function tictactoe()
-    drawStatusScreen(sh, sw, 0,0)
-    drawGameScreen(gh,gw, ghOffset, gwOffset)
+    drawStatusScreen(gameDimensions, gameState)
+    drawGameScreen(gameDimensions, gameState)
 
-    if gameOver then
-        drawGameOver()
+    if gameState.gameOver then
+        drawGameOver(gameDimensions, gameState)
     end
 end

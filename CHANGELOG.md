@@ -7,6 +7,11 @@
  - [ ] Custom O symbol
  - [ ] Custom boxes
 
+### [1.0.2] 2024-01-04
+
+- Refactored for better or worse. Moved all globals into a global table separating the gameState and 
+  game dimensions into separate tables.
+
 ### [1.0.1] 2024-01-04
 
 - Separate game state and draw logic into separate files. 

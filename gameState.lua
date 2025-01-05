@@ -1,10 +1,10 @@
-
 local isClicked = false
 local wasDownLastFrame = false
 
--- Update the gameState
-function handleUpdate()
-    if not gameOver then
+-- Update the boardState
+function handleUpdate(gameDimensions, gameState)
+
+    if not gameState.gameOver then
         local isDownNow = love.mouse.isDown(1)
 
         -- A "new" click is one that wasn't down last frame but is down now
@@ -18,30 +18,32 @@ function handleUpdate()
         if isClicked then
             -- Update the game state and save which player is next.
             local nextPlayer = ""
-            nextPlayer = updateBoardState(bbs,gameState,currentPlayer)
+            nextPlayer = updateBoardState(gameDimensions.bbs,gameState.boardState,gameState.currentPlayer)
             isClicked = false
 
             -- Check that the the current player has not gotten three in a row as of the current move.
-            gameOver, winningSequence = checkIfWon( gameState, playerSymbol[currentPlayer] )
+            gameState.gameOver, gameState.winningSequence = checkIfWon( gameState.boardState, gameState.playerSymbol[gameState.currentPlayer] )
     
-            local boxesFilled = allBoxesFilled(gameState)                
+            local boxesFilled = allBoxesFilled(gameState.boardState)                
+
             if boxesFilled then
-                gameOver = true
-                gameTied = true
+                gameState.gameOver = true
+                gameState.gameTied = true
             end
 
-            if gameOver and not gameTied then
-                playerScore[currentPlayer] = playerScore[currentPlayer] + 1
+            if gameState.gameOver and not gameState.gameTied then
+                gameState.playerScore[gameState.currentPlayer] = gameState.playerScore[gameState.currentPlayer] + 1
             end
-            if not gameOver then
-                currentPlayer = nextPlayer
+            if not gameState.gameOver then
+                gameState.currentPlayer = nextPlayer
             end
+
         end
     end
 
-    if gameOver then
+    if gameState.gameOver then
         if love.keyboard.isDown("y") then
-             resetGame()
+            resetGame(gameState)
         end 
 
         if love.keyboard.isDown("n") then
@@ -108,7 +110,7 @@ getBoundingBoxes = function(h,w, hOffset, wOffset)
 end
 
 -- Update the state of the tictactoe board.
-function updateBoardState( boundingBoxes, gameState, currentPlayer )
+function updateBoardState( boundingBoxes, boardState, currentPlayer )
 
     -- Update the the state based on which box the user clicked.
     local mx, my = love.mouse.getPosition()
@@ -120,12 +122,12 @@ function updateBoardState( boundingBoxes, gameState, currentPlayer )
             -- box update the state.
             if mx > bb.x1 and mx < bb.x2 and
                my > bb.y1 and my < bb.y2 and
-               gameState[i] == "" then
+               boardState[i] == "" then
 
                 if currentPlayer == "1" then
-                    gameState[i] = "x" 
+                    boardState[i] = "x" 
                 else 
-                    gameState[i] = "o"
+                    boardState[i] = "o"
                 end
 
                 -- Update the current player.
@@ -142,32 +144,32 @@ function updateBoardState( boundingBoxes, gameState, currentPlayer )
     return currentPlayer
 end
 
-function checkIfWon( gameState, playerSymbol )
+function checkIfWon( boardState, playerSymbol )
 
   local winningSequence = {}
   local won = false
   
     -- Check horizontal 3 in a rows.
-    if gameState[1] == playerSymbol and
-       gameState[2] == playerSymbol and
-       gameState[3] == playerSymbol then
+    if boardState[1] == playerSymbol and
+       boardState[2] == playerSymbol and
+       boardState[3] == playerSymbol then
         winningSequence[#winningSequence+1] = 1
         winningSequence[#winningSequence+1] = 2
         winningSequence[#winningSequence+1] = 3
         won = true
     end
     
-    if gameState[4] == playerSymbol and
-       gameState[5] == playerSymbol and
-       gameState[6] == playerSymbol then
+    if boardState[4] == playerSymbol and
+       boardState[5] == playerSymbol and
+       boardState[6] == playerSymbol then
         winningSequence[#winningSequence+1] = 4
         winningSequence[#winningSequence+1] = 5
         winningSequence[#winningSequence+1] = 6
         won = true    
     end
-    if gameState[7] == playerSymbol and
-       gameState[8] == playerSymbol and
-       gameState[9] == playerSymbol then
+    if boardState[7] == playerSymbol and
+       boardState[8] == playerSymbol and
+       boardState[9] == playerSymbol then
         winningSequence[#winningSequence+1] = 7
         winningSequence[#winningSequence+1] = 8
         winningSequence[#winningSequence+1] = 9
@@ -175,25 +177,25 @@ function checkIfWon( gameState, playerSymbol )
     end
 
     -- Check vertical three in a rows.
-    if gameState[1] == playerSymbol and
-       gameState[4] == playerSymbol and
-       gameState[7] == playerSymbol then
+    if boardState[1] == playerSymbol and
+       boardState[4] == playerSymbol and
+       boardState[7] == playerSymbol then
         winningSequence[#winningSequence+1] = 1
         winningSequence[#winningSequence+1] = 4
         winningSequence[#winningSequence+1] = 7
         won = true
     end
-    if gameState[2] == playerSymbol and
-       gameState[5] == playerSymbol and
-       gameState[8] == playerSymbol then
+    if boardState[2] == playerSymbol and
+       boardState[5] == playerSymbol and
+       boardState[8] == playerSymbol then
         winningSequence[#winningSequence+1] = 2
         winningSequence[#winningSequence+1] = 5
         winningSequence[#winningSequence+1] = 8
         won = true     
     end
-    if gameState[3] == playerSymbol and
-       gameState[6] == playerSymbol and
-       gameState[9] == playerSymbol then
+    if boardState[3] == playerSymbol and
+       boardState[6] == playerSymbol and
+       boardState[9] == playerSymbol then
         winningSequence[#winningSequence+1] = 3
         winningSequence[#winningSequence+1] = 6
         winningSequence[#winningSequence+1] = 9
@@ -201,18 +203,18 @@ function checkIfWon( gameState, playerSymbol )
     end
 
     -- Check diagonal three and a rows.
-    if gameState[1] == playerSymbol and
-       gameState[5] == playerSymbol and
-       gameState[9] == playerSymbol then
+    if boardState[1] == playerSymbol and
+       boardState[5] == playerSymbol and
+       boardState[9] == playerSymbol then
         winningSequence[#winningSequence+1] = 1
         winningSequence[#winningSequence+1] = 5
         winningSequence[#winningSequence+1] = 9
         won = true     
     end
     
-    if gameState[3] == playerSymbol and
-       gameState[5] == playerSymbol and
-       gameState[7] == playerSymbol then
+    if boardState[3] == playerSymbol and
+       boardState[5] == playerSymbol and
+       boardState[7] == playerSymbol then
         winningSequence[#winningSequence+1] = 3
         winningSequence[#winningSequence+1] = 5
         winningSequence[#winningSequence+1] = 7
@@ -224,9 +226,9 @@ function checkIfWon( gameState, playerSymbol )
 end
 
 
--- Checks the gameState
-function allBoxesFilled( gameState )
-    for _, value in ipairs(gameState) do
+-- Checks the boardState
+function allBoxesFilled( boardState )
+    for _, value in ipairs(boardState) do
         if value == "" then
             return false
         end
@@ -235,22 +237,21 @@ function allBoxesFilled( gameState )
     return true
 end
 
-function resetGame()
+function resetGame(gameState)
 
-    winningSequence = {}
-    gameState = {"","","","","","","","",""}
+    gameState.winningSequence = {}
+    gameState.boardState = {"","","","","","","","",""}
 
-    if currentPlayer == "1" then
-        currentPlayer = "2"
+    if gameState.currentPlayer == "1" then
+        gameState.currentPlayer = "2"
     else
-        currentPlayer = "1"
+        gameState.currentPlayer = "1"
     end
 
-    playerSymbol = {}
-    playerSymbol["1"] = "x"
-    playerSymbol["2"] = "o"
+    gameState.playerSymbol = {}
+    gameState.playerSymbol["1"] = "x"
+    gameState.playerSymbol["2"] = "o"
 
-    gameOver = false
-    gameTied = false
-
+    gameState.gameOver = false
+    gameState.gameTied = false
 end
