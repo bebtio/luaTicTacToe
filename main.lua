@@ -1,9 +1,13 @@
 require("gameState")
 require("drawGame")
+local Entity = require("entity")
+
 local gameState
 local gameDimensions
 
 function love.load(arg)
+    local r,g,b = love.math.colorFromBytes(132, 193, 238)
+    love.graphics.setBackgroundColor(r,g,b,0)
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
     love.graphics.setDefaultFilter("nearest","nearest")
@@ -34,12 +38,18 @@ function love.load(arg)
     local oImageHighlighted  = love.graphics.newImage("sprites/blueOHighlighted.png")
     local xImageHighlighted  = love.graphics.newImage("sprites/pinkXHighlighted.png")
 
+    local background         = love.graphics.newImage("sprites/background.png")
+
     local playerImages = {
         image  = {["x"] = xImage,  ["o"] = oImage},
         highlightedImage = {["x"] = xImageHighlighted, ["o"] = oImageHighlighted}
     }
+
+    local entities = createInitialClouds(50)
+
     gameState =
     {
+        background = background,
         -- Tracks the score of the current player.
         playerScore = {["1"] = 0, ["2"] = 0},
 
@@ -50,13 +60,14 @@ function love.load(arg)
         playerSymbol = {["1"] = "x",     ["2"] = "o"},
         playerCursor = {["1"] = xCursor, ["2"] = oCursor},
         playerImages = playerImages,
-
+        
         -- Tracks the winning sequence indices so we can highlight it in a different color.
         winningSequence = {},
 
         -- Tracks the current player.
         currentPlayer = "1",
 
+        clouds = entities,
         gameOver = false,
         gameTied = false,
     }
@@ -81,7 +92,7 @@ end
 
 
 function love.update(dt)
-    handleUpdate(gameDimensions, gameState)
+    handleUpdate(dt, gameDimensions, gameState)
 end
 
 function love.draw()
@@ -89,7 +100,10 @@ function love.draw()
 end
 
 function tictactoe()
+
     updateCursor(gameState)
+
+    drawClouds(gameState)
     drawStatusScreen(gameDimensions, gameState)
     drawGameScreen(gameDimensions, gameState)
 
@@ -97,3 +111,4 @@ function tictactoe()
         drawGameOver(gameDimensions, gameState)
     end
 end
+

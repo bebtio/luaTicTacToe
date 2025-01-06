@@ -1,9 +1,14 @@
 local isClicked = false
 local wasDownLastFrame = false
 
+local lastTime = 0
+local time = 0
 -- Update the boardState
-function handleUpdate(gameDimensions, gameState)
+function handleUpdate(dt, gameDimensions, gameState)
 
+    time = time + dt
+
+    updateClouds(dt,gameState) 
     if not gameState.gameOver then
         local isDownNow = love.mouse.isDown(1)
 
@@ -254,4 +259,25 @@ function resetGame(gameState)
 
     gameState.gameOver = false
     gameState.gameTied = false
+end
+
+function updateClouds(dt, gameState)
+
+    local rand = love.math.newRandomGenerator(love.timer.getTime() * 100 )
+ 
+    local xPos = 0
+    for i = 1, #gameState.clouds do
+        
+        gameState.clouds[i]:update(dt)
+        xPos = gameState.clouds[i].pos.x
+
+        -- Once the clouds go out of the screen we want to 
+        -- reset their position to some random y, but start off screen in x.
+        -- Also randomize their velociry in the x direction.
+        if xPos > love.graphics.getWidth() + 32 then
+            gameState.clouds[i].pos.x = - 32
+            gameState.clouds[i].pos.y = rand:random(0, love.graphics.getHeight())
+            gameState.clouds[i].vel.x = rand:random(20,50)
+        end
+    end
 end

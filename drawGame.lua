@@ -114,6 +114,14 @@ function updateCursor(gameState)
 end
 
 
+function drawClouds(gameState)
+
+    for i = 1, #gameState.clouds do
+
+        gameState.clouds[i]:draw()
+    end
+
+end
 -----------------------------------------------------------------------------------------
 -- No longer needed!
 -- Draw an X or an O at the clicked bounding box.
