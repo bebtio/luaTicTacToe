@@ -45,7 +45,8 @@ function love.load(arg)
         highlightedImage = {["x"] = xImageHighlighted, ["o"] = oImageHighlighted}
     }
 
-    local entities = createInitialClouds(50)
+    local cloudImage = love.graphics.newImage("sprites/nuvem.png")
+    local entities = createInitialClouds(50, cloudImage)
 
     gameState =
     {

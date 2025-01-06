@@ -3,9 +3,12 @@ local Entity = {}
 Entity.__index = Entity
 
 -- Constructor function
-function Entity.new(x, y, vx, vy)
+function Entity.new(x, y, vx, vy, image)
+
+
     -- Create a new “object” that is just a table
     local self = {
+        image = image or nil,
         -- pos can be a small table with x, y
         pos = { x = x or 0, y = y or 0 },
         -- vel can be a small table with x, y
@@ -24,15 +27,21 @@ end
 -- Optionally a function to draw the entity (if you like)
 function Entity:draw()
     -- Example: draw a simple rectangle (or sprite) at pos.x, pos.y
+
     love.graphics.setColor(1,1,1,0.5)
-    love.graphics.circle("fill", self.pos.x, self.pos.y,32)
+    if self.image == nil then
+        love.graphics.circle("fill", self.pos.x, self.pos.y,32)
+    else
+        love.graphics.draw(self.image, self.pos.x, self.pos.y, 0, 2,2)
+    end
+
     love.graphics.setColor(1,1,1)
 end
 
-function createInitialClouds( numClouds )
+function createInitialClouds( numClouds, image )
 
+    local image = image or nil
     local rng = love.math.newRandomGenerator()
-
 
     local px,py,vx,vy = 0,0,0,0
     
@@ -44,7 +53,7 @@ function createInitialClouds( numClouds )
         vx = rng:random(20,50)
         vy = 0
 
-        table.insert(clouds,Entity.new(px,py,vx,vy))
+        table.insert(clouds,Entity.new(px,py,vx,vy,image))
     end
 
     return clouds

@@ -267,17 +267,28 @@ function updateClouds(dt, gameState)
  
     local xPos = 0
     for i = 1, #gameState.clouds do
-        
-        gameState.clouds[i]:update(dt)
-        xPos = gameState.clouds[i].pos.x
+        local cloud = gameState.clouds[i]
+
+        local width = 32 
+        local offset = width
+
+        -- The offset of the cloud image is wierd so I need
+        -- special logic to make it work.
+        if cloud.image ~= nil then 
+            width = cloud.image:getWidth()
+            offset = width*2
+        end
+
+        cloud:update(dt)
+        xPos = cloud.pos.x
 
         -- Once the clouds go out of the screen we want to 
         -- reset their position to some random y, but start off screen in x.
         -- Also randomize their velociry in the x direction.
-        if xPos > love.graphics.getWidth() + 32 then
-            gameState.clouds[i].pos.x = - 32
-            gameState.clouds[i].pos.y = rand:random(0, love.graphics.getHeight())
-            gameState.clouds[i].vel.x = rand:random(20,50)
+        if xPos > love.graphics.getWidth() + offset then
+            cloud.pos.x = - offset 
+            cloud.pos.y = rand:random(0, love.graphics.getHeight())
+            cloud.vel.x = rand:random(20, 50)
         end
     end
 end

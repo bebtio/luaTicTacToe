@@ -11,6 +11,10 @@
  - [ ] Custom boxes
  - [ ] Animate the X and O?
 
+### [1.4.1] 2024-01-05
+
+- Updated so that the circles are now clouds that I got from [Ian Peter's](https://opengameart.org/content/cloud-2)
+
 ### [1.4.0] 2024-01-05
 
 - Added floating background circles!
