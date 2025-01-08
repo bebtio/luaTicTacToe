@@ -7,9 +7,13 @@
  - [x] Custom O symbol : 1.2.0
  - [x] Highlight X and O when a win occurs.
  - [x] Floating background
- - [ ] Create a colorful border aroune the whole screen.
+ - [ ] Create a colorful border around the whole screen.
  - [ ] Custom boxes
  - [ ] Animate the X and O?
+
+### [1.4.2] 2024-01-07
+
+- Added my own cloud sprite.
 
 ### [1.4.1] 2024-01-05
 
