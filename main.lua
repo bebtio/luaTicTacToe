@@ -5,6 +5,7 @@ local Entity = require("entity")
 local gameState
 local gameDimensions
 
+
 function love.load(arg)
     local r,g,b = love.math.colorFromBytes(132, 193, 238)
     love.graphics.setBackgroundColor(r,g,b,0)
@@ -45,7 +46,7 @@ function love.load(arg)
         highlightedImage = {["x"] = xImageHighlighted, ["o"] = oImageHighlighted}
     }
 
-    local cloudImage = love.graphics.newImage("sprites/nuvem.png")
+    local cloudImage = love.graphics.newImage("sprites/cloud.png")
     local entities = createInitialClouds(50, cloudImage)
 
     gameState =

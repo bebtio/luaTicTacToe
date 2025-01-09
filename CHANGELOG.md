@@ -11,6 +11,8 @@
  - [ ] Custom boxes
  - [ ] Animate the X and O?
 
+- [ ] Make so that the screen is resizable and everything scales correctly.
+
 ### [1.4.2] 2024-01-07
 
 - Added my own cloud sprite.
