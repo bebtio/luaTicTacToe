@@ -14,7 +14,7 @@
  - [ ] Custom boxes
  - [ ] Animate the X and O?
 
-- [ ] Make so that the screen is resizable and everything scales correctly.
+- [x] Make so that the screen is resizable and everything scales correctly.
 
 ### [1.5.0] 2024-01-07
 
