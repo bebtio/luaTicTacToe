@@ -122,6 +122,16 @@ function drawClouds(gameState)
     end
 
 end
+
+function drawBorder(gameDimensions, gameState)
+    
+    local height = love.graphics.getHeight()
+    local width = love.graphics.getWidth()
+
+    local hScale = gameDimensions.heightScale 
+    local wScale = gameDimensions.widthScale 
+    love.graphics.draw(gameState.border, 0,0,0, wScale,hScale)
+end
 -----------------------------------------------------------------------------------------
 -- No longer needed!
 -- Draw an X or an O at the clicked bounding box.

@@ -12,24 +12,6 @@ function love.load(arg)
   
     love.graphics.setDefaultFilter("nearest","nearest")
     
-    -- Create the game window height and width.
-    local windowRatio = 0.75 -- The ratio of screen space the game window takes up version compared to the status bar.
-
-    local ghOffset = love.graphics.getHeight() * (1-windowRatio)
-    local gwOffset = 0
-
-    -- Create the gameBoard dimensions.
-    local gh = love.graphics.getHeight() * windowRatio
-    local gw = love.graphics.getWidth()
-
-    -- Create the game status bar height and width.
-    local sh = love.graphics.getHeight() * (1-windowRatio)
-    local sw = love.graphics.getWidth()
-
-    local lastHeight = gh
-    local lastWidth  = gw
-    -- Compute the bounding boxes for each grid element.
-    local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
 
     local oCursor = love.mouse.newCursor("sprites/blueO.png",16,16)
     local xCursor = love.mouse.newCursor("sprites/pinkX.png",16,16)
@@ -40,7 +22,7 @@ function love.load(arg)
     local oImageHighlighted  = love.graphics.newImage("sprites/blueOHighlighted.png")
     local xImageHighlighted  = love.graphics.newImage("sprites/pinkXHighlighted.png")
 
-    local background         = love.graphics.newImage("sprites/background.png")
+    local border         = love.graphics.newImage("sprites/Border.png")
 
     local playerImages = {
         image  = {["x"] = xImage,  ["o"] = oImage},
@@ -52,7 +34,7 @@ function love.load(arg)
 
     gameState =
     {
-        background = background,
+        border = border,
         -- Tracks the score of the current player.
         playerScore = {["1"] = 0, ["2"] = 0},
 
@@ -75,29 +57,41 @@ function love.load(arg)
         gameTied = false,
     }
 
+
     gameDimensions = 
     {
+        -- The dimensions of the original game sprite canvas.
+        trueHeight = 96,
+        trueWidth  = 96, 
+
+        -- The scale factor required to scale the artwork to the current window size.
+        heightScale = 0,
+        widthScale  = 0,
+
+        -- This must be set.
+        -- The ratio between the status area and the game area. i.e the game area takes up 85 percent of the screen.
+        windowRatio = .85,
+
         -- If the current love.getDimensions is different than the lastHeight/Width, update
         -- these parameters.
-        lastHeight = lastHeight,
-        lastWidth  = lastWidth,
-
-        windowRatio = windowRatio,
+        lastHeight = 0,
+        lastWidth  = 0,
 
         -- Bounding boxes that define the clickable grids.
-        bbs = bbs,
+        bbs = {},
 
         -- The board game height and width and offsets.
-        gh = gh,
-        gw = gw,
-        ghOffset = ghOffset,
-        gwOffset = gwOffset,
+        gh = 0,
+        gw = 0,
+        ghOffset = 0,
+        gwOffset = 0,
 
         -- That top status bar height and width.
-        sh = sh,
-        sw = sw
+        sh = 0,
+        sw = 0
     }
 
+    updateGameDimensions(gameDimensions)
 end
 
 
@@ -114,6 +108,7 @@ function tictactoe()
     updateCursor(gameState)
 
     drawClouds(gameState)
+    drawBorder(gameDimensions, gameState)
     drawStatusScreen(gameDimensions, gameState)
     drawGameScreen(gameDimensions, gameState)
 

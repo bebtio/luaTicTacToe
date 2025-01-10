@@ -16,7 +16,11 @@
 
 - [x] Make so that the screen is resizable and everything scales correctly.
 
-### [1.5.0] 2024-01-07
+### [1.5.1] 2024-01-09
+
+- Updated the load function to call the updateGameDimensions function to initialize the gameDimensions table.
+
+### [1.5.0] 2024-01-09
 
 - Screen can now be resized and images will scale properlys.
 - Added conf.lua.
