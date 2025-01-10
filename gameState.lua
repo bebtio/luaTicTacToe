@@ -300,44 +300,33 @@ function updateGameDimensions(gameDimensions)
        gameDimensions.lastWidth  ~= love.graphics.getWidth()  then
 
 
-    
+        -- lua treats all tables as references so this is actually an alias to 
+        -- to gameDimensions.
+        local gd = gameDimensions
+        
+        -- Border width in pixels.
+        local borderWidth = 12
+
         -- Create the game window height and width.
-        local windowRatio = gameDimensions.windowRatio -- The ratio of screen space the game window takes up version compared to the status bar.
+        local windowRatio = gd.windowRatio -- The ratio of screen space the game window takes up version compared to the status bar.
 
-        local heightScale = love.graphics.getHeight() / gameDimensions.trueHeight
-        local widthScale  = love.graphics.getWidth()  / gameDimensions.trueWidth
+        gd.heightScale = love.graphics.getHeight() / gd.trueHeight
+        gd.widthScale  = love.graphics.getWidth()  / gd.trueWidth
 
-        local ghOffset = love.graphics.getHeight() * (1-windowRatio)
-        local gwOffset = 0
+        -- Create the game status bar height and width.
+        gd.sh          = (gd.trueHeight * gd.heightScale) * (1-windowRatio)
+        gd.sw          = ((gd.trueWidth  - borderWidth)* gd.widthScale )
+
+        gd.ghOffset    = gd.sh
+        gd.gwOffset    = (borderWidth / 2) * gd.widthScale
         
         -- Create the gameBoard dimensions.
-        local gh = love.graphics.getHeight() * windowRatio
-        local gw = love.graphics.getWidth()
+        gd.gh          = ((gd.trueHeight - borderWidth)* gd.heightScale) * windowRatio
+        gd.gw          = ((gd.trueWidth  - borderWidth)* gd.widthScale )
         
-        -- Create the game status bar height and width.
-        local sh = love.graphics.getHeight() * (1-windowRatio)
-        local sw = love.graphics.getWidth()
         
         -- Compute the bounding boxes for each grid element.
-        local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
-
-        gameDimensions.heightScale = heightScale
-        gameDimensions.widthScale  = widthScale
-
-        gameDimensions.lastHeight = gh
-        gameDimensions.lastWidth  = gw
-        -- Bounding boxes that define the clickable grids.
-        gameDimensions.bbs = bbs
-
-        -- The board game height and width and offsets.
-        gameDimensions.gh = gh
-        gameDimensions.gw = gw
-        gameDimensions.ghOffset = ghOffset
-        gameDimensions.gwOffset = gwOffset
-
-        -- That top status bar height and width.
-        gameDimensions.sh = sh
-        gameDimensions.sw = sw
+        gd.bbs         = getBoundingBoxes(gd.gh,gd.gw, gd.ghOffset, gd.gwOffset)
 
     end
 end

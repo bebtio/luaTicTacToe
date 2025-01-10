@@ -70,7 +70,7 @@ function love.load(arg)
 
         -- This must be set.
         -- The ratio between the status area and the game area. i.e the game area takes up 85 percent of the screen.
-        windowRatio = .85,
+        windowRatio = .75,
 
         -- If the current love.getDimensions is different than the lastHeight/Width, update
         -- these parameters.

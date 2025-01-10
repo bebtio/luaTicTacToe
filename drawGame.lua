@@ -93,14 +93,13 @@ function drawGameScreen( gameDimensions, gameState )
     local hOffset = gameDimensions.ghOffset or 0
     local wOffset = gameDimensions.gwOffset or 0 
 
-
     -- The two vertical lines.
-    love.graphics.line(w/3   + wOffset, 0     + hOffset, w/3  , h     + hOffset)
-    love.graphics.line(2*w/3 + wOffset, 0     + hOffset, 2*w/3, h     + hOffset)
+    love.graphics.line(w/3   + wOffset, hOffset , w/3   + wOffset, h     + hOffset)
+    love.graphics.line(2*w/3 + wOffset, hOffset , 2*w/3 + wOffset, h     + hOffset)
 
     -- The two horizontal lines.
-    love.graphics.line(0     + wOffset, h/3   + hOffset, w,     h/3   + hOffset)
-    love.graphics.line(0     + wOffset, 2*h/3 + hOffset, w,     2*h/3 + hOffset)
+    love.graphics.line(0     + wOffset, h/3   + hOffset, w + wOffset,     h/3   + hOffset)
+    love.graphics.line(0     + wOffset, 2*h/3 + hOffset, w + wOffset,     2*h/3 + hOffset)
 
     -- Iterate over the game state and draw a circle or X depending on the state.
     for i = 1,9 do
