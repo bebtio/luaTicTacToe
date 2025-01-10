@@ -5,7 +5,6 @@ local Entity = require("entity")
 local gameState
 local gameDimensions
 
-
 function love.load(arg)
     local r,g,b = love.math.colorFromBytes(132, 193, 238)
     love.graphics.setBackgroundColor(r,g,b,0)
@@ -14,7 +13,7 @@ function love.load(arg)
     love.graphics.setDefaultFilter("nearest","nearest")
     
     -- Create the game window height and width.
-    local windowRatio = .80 -- The ratio of screen space the game window takes up version compared to the status bar.
+    local windowRatio = 0.75 -- The ratio of screen space the game window takes up version compared to the status bar.
 
     local ghOffset = love.graphics.getHeight() * (1-windowRatio)
     local gwOffset = 0
@@ -27,6 +26,8 @@ function love.load(arg)
     local sh = love.graphics.getHeight() * (1-windowRatio)
     local sw = love.graphics.getWidth()
 
+    local lastHeight = gh
+    local lastWidth  = gw
     -- Compute the bounding boxes for each grid element.
     local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
 
@@ -76,6 +77,13 @@ function love.load(arg)
 
     gameDimensions = 
     {
+        -- If the current love.getDimensions is different than the lastHeight/Width, update
+        -- these parameters.
+        lastHeight = lastHeight,
+        lastWidth  = lastWidth,
+
+        windowRatio = windowRatio,
+
         -- Bounding boxes that define the clickable grids.
         bbs = bbs,
 

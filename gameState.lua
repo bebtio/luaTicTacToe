@@ -8,6 +8,7 @@ function handleUpdate(dt, gameDimensions, gameState)
 
     time = time + dt
 
+    updateGameDimensions(gameDimensions)
     updateClouds(dt,gameState) 
     if not gameState.gameOver then
         local isDownNow = love.mouse.isDown(1)
@@ -290,5 +291,49 @@ function updateClouds(dt, gameState)
             cloud.pos.y = rand:random(0, love.graphics.getHeight())
             cloud.vel.x = rand:random(20, 50)
         end
+    end
+end
+
+function updateGameDimensions(gameDimensions)
+
+    if gameDimensions.lastHeight ~= love.graphics.getHeight() or 
+       gameDimensions.lastWidth  ~= love.graphics.getWidth()  then
+
+
+     -- Create the game window height and width.
+     local windowRatio = gameDimensions.windowRatio -- The ratio of screen space the game window takes up version compared to the status bar.
+
+     local ghOffset = love.graphics.getHeight() * (1-windowRatio)
+     local gwOffset = 0
+ 
+     -- Create the gameBoard dimensions.
+     local gh = love.graphics.getHeight() * windowRatio
+     local gw = love.graphics.getWidth()
+ 
+     -- Create the game status bar height and width.
+     local sh = love.graphics.getHeight() * (1-windowRatio)
+     local sw = love.graphics.getWidth()
+ 
+     local lastHeight = gh
+     local lastWidth  = gw
+     -- Compute the bounding boxes for each grid element.
+     local bbs = getBoundingBoxes(gh,gw, ghOffset, gwOffset)
+
+
+    gameDimensions.lastHeight = gh
+    gameDimensions.lastWidth  = gw
+    -- Bounding boxes that define the clickable grids.
+    gameDimensions.bbs = bbs
+
+    -- The board game height and width and offsets.
+    gameDimensions.gh = gh
+    gameDimensions.gw = gw
+    gameDimensions.ghOffset = ghOffset
+    gameDimensions.gwOffset = gwOffset
+
+    -- That top status bar height and width.
+    gameDimensions.sh = sh
+    gameDimensions.sw = sw
+
     end
 end

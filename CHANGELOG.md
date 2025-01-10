@@ -8,10 +8,18 @@
  - [x] Highlight X and O when a win occurs.
  - [x] Floating background
  - [ ] Create a colorful border around the whole screen.
+  - [ ] If I want to make the pixel art in scale with the x's and o's I can make the border
+        in 96x96 pixels for the whole screen.
+        The status window is 24x96 and the game window is 72x96 
  - [ ] Custom boxes
  - [ ] Animate the X and O?
 
 - [ ] Make so that the screen is resizable and everything scales correctly.
+
+### [1.5.0] 2024-01-07
+
+- Screen can now be resized and images will scale properlys.
+- Added conf.lua.
 
 ### [1.4.2] 2024-01-07
 
