@@ -61,7 +61,7 @@ function love.load(arg)
     gameDimensions = 
     {
         -- The dimensions of the original game sprite canvas.
-        trueHeight = 96,
+        trueHeight = 120,
         trueWidth  = 96, 
 
         -- The scale factor required to scale the artwork to the current window size.
@@ -70,7 +70,7 @@ function love.load(arg)
 
         -- This must be set.
         -- The ratio between the status area and the game area. i.e the game area takes up 85 percent of the screen.
-        windowRatio = .75,
+        windowRatio = .8,
 
         -- If the current love.getDimensions is different than the lastHeight/Width, update
         -- these parameters.
