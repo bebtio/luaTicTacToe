@@ -40,7 +40,7 @@ function drawPngAtBox( O_Or_X, playerImages, boundingBox )
         -- Compute the scale factor required to fit the image in the bounding box.
         -- Shrink the scale factor a little so the shapes are not touching the border of
         -- the bounding box.
-        local twiddleFactor = 0.90
+        local twiddleFactor = 1.0
         local wScale = (sideLength / w) * twiddleFactor
         local hScale = (sideLength / h) * twiddleFactor
 
@@ -123,10 +123,6 @@ function drawClouds(gameState)
 end
 
 function drawBorder(gameDimensions, gameState)
-    
-    local height = love.graphics.getHeight()
-    local width = love.graphics.getWidth()
-
     local hScale = gameDimensions.heightScale 
     local wScale = gameDimensions.widthScale 
     love.graphics.draw(gameState.border, 0,0,0, wScale,hScale)
