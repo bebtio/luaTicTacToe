@@ -77,21 +77,29 @@ function drawStatusScreen( gameDimensions, gameState )
     local h = gameDimensions.sh
     local w = gameDimensions.sw
 
+    love.graphics.rectangle("fill", 
+                            gameDimensions.tsWOffset,
+                            gameDimensions.tsHOffset,
+                            gameDimensions.tsW,
+                            gameDimensions.tsH)
+
     -- Draw currentPlayer turn.
+    love.graphics.setColor(0,0,1)
     love.graphics.print("Current player: " .. gameState.currentPlayer .. " (" .. gameState.playerSymbol[gameState.currentPlayer] .. ")", 0,0)
 
     love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], 0, 85 )
     love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], 0, 100 )
     love.graphics.line(0,h,w,h)
+    love.graphics.setColor(1,1,1)
 
 end
 
 function drawGameScreen( gameDimensions, gameState )
 
-    local h = gameDimensions.gh or love.graphics.getHeight()
-    local w = gameDimensions.gw or love.graphics.getWidth()
-    local hOffset = gameDimensions.ghOffset or 0
-    local wOffset = gameDimensions.gwOffset or 0 
+    local h = gameDimensions.bbH or love.graphics.getHeight()
+    local w = gameDimensions.bbW or love.graphics.getWidth()
+    local hOffset = gameDimensions.bbHOffset or 0
+    local wOffset = gameDimensions.bbWOffset or 0 
 
     -- The two vertical lines.
     love.graphics.line(w/3   + wOffset, hOffset , w/3   + wOffset, h     + hOffset)

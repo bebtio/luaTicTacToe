@@ -314,19 +314,34 @@ function updateGameDimensions(gameDimensions)
         gd.widthScale  = love.graphics.getWidth()  / gd.trueWidth
 
         -- Create the game status bar height and width.
-        gd.sh          = (gd.trueHeight * gd.heightScale) * (1-windowRatio)
-        gd.sw          = ((gd.trueWidth  - borderWidth)* gd.widthScale )
+        gd.sh          = (gd.trueHeight * gd.heightScale) * (1-windowRatio) 
+        gd.sw          = (gd.trueWidth  * gd.widthScale )
 
-        gd.ghOffset    = gd.sh
-        gd.gwOffset    = (borderWidth / 2) * gd.widthScale
         
         -- Create the gameBoard dimensions.
-        gd.gh          = ((gd.trueHeight - borderWidth)* gd.heightScale) * windowRatio
-        gd.gw          = ((gd.trueWidth  - borderWidth)* gd.widthScale )
+        gd.ghOffset    = gd.sh
+        gd.gwOffset    = 0
+
+        gd.gh          = (gd.trueHeight * gd.heightScale) * windowRatio
+        gd.gw          = (gd.trueWidth  * gd.widthScale )
         
-        
+        -- Now add the game border to create the status bar text space and
+        -- the bounding box area.
+
+        gd.tsHOffset = ( borderWidth / 2 ) * gd.heightScale
+        gd.tsWOffset = ( borderWidth / 2 ) * gd.widthScale
+
+        gd.tsH       = gd.sh - ( borderWidth * gd.heightScale )
+        gd.tsW       = gd.sw - ( borderWidth * gd.widthScale  )
+ 
+        gd.bbHOffset = gd.sh + ( borderWidth / 2 ) * gd.heightScale
+        gd.bbWOffset =         ( borderWidth / 2 ) * gd.widthScale
+
+        gd.bbH       = gd.gh - ( borderWidth * gd.heightScale )
+        gd.bbW       = gd.gw - ( borderWidth * gd.widthScale  )
+
         -- Compute the bounding boxes for each grid element.
-        gd.bbs         = getBoundingBoxes(gd.gh,gd.gw, gd.ghOffset, gd.gwOffset)
+        gd.bbs         = getBoundingBoxes(gd.bbH,gd.bbW, gd.bbHOffset, gd.bbWOffset)
 
     end
 end

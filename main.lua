@@ -105,10 +105,12 @@ end
 
 function tictactoe()
 
+    local gd = gameDimensions
     updateCursor(gameState)
 
     drawClouds(gameState)
     drawBorder(gameDimensions, gameState)
+    
     drawStatusScreen(gameDimensions, gameState)
     drawGameScreen(gameDimensions, gameState)
 
