@@ -317,7 +317,6 @@ function updateGameDimensions(gameDimensions)
         gd.sh          = (gd.trueHeight * gd.heightScale) * (1-windowRatio) 
         gd.sw          = (gd.trueWidth  * gd.widthScale )
 
-        
         -- Create the gameBoard dimensions.
         gd.ghOffset    = gd.sh
         gd.gwOffset    = 0

@@ -1,4 +1,69 @@
 
+function drawGameScreen( gameDimensions, gameState )
+    drawClouds(gameState)
+    drawBoundingBoxGrid(gameDimensions, gameState)
+    drawBorder(gameDimensions, gameState)
+    drawStatusScreen(gameDimensions, gameState)
+end
+
+function drawClouds(gameState)
+    for i = 1, #gameState.clouds do
+        gameState.clouds[i]:draw()
+    end
+end
+
+function drawBoundingBoxGrid( gameDimensions, gameState )
+    local h = gameDimensions.bbH or love.graphics.getHeight()
+    local w = gameDimensions.bbW or love.graphics.getWidth()
+    local hOffset = gameDimensions.bbHOffset or 0
+    local wOffset = gameDimensions.bbWOffset or 0 
+
+    -- The two vertical lines.
+    love.graphics.line(w/3   + wOffset, hOffset , w/3   + wOffset, h     + hOffset)
+    love.graphics.line(2*w/3 + wOffset, hOffset , 2*w/3 + wOffset, h     + hOffset)
+
+    -- The two horizontal lines.
+    love.graphics.line(0     + wOffset, h/3   + hOffset, w + wOffset,     h/3   + hOffset)
+    love.graphics.line(0     + wOffset, 2*h/3 + hOffset, w + wOffset,     2*h/3 + hOffset)
+
+    -- Iterate over the game state and draw a circle or X depending on the state.
+    for i = 1,9 do
+        --drawAtBox(gameDimensions.bbs[i], gameState.boardState[i])
+        drawPngAtBox(gameState.boardState[i], gameState.playerImages.image, gameDimensions.bbs[i])
+    end
+end
+
+function drawBorder(gameDimensions, gameState)
+    local hScale = gameDimensions.heightScale 
+    local wScale = gameDimensions.widthScale 
+    love.graphics.draw(gameState.border, 0,0,0, wScale,hScale)
+end
+
+function drawStatusScreen( gameDimensions, gameState )
+
+    local h = gameDimensions.sh
+    local w = gameDimensions.sw
+
+    love.graphics.rectangle("fill", 
+                            gameDimensions.tsWOffset,
+                            gameDimensions.tsHOffset,
+                            gameDimensions.tsW,
+                            gameDimensions.tsH)
+
+    -- Draw currentPlayer turn.
+    love.graphics.setColor(0,0,1)
+    love.graphics.print("Current player: " .. gameState.currentPlayer .. " (" .. gameState.playerSymbol[gameState.currentPlayer] .. ")", 0,0)
+
+    love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], 0, 85 )
+    love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], 0, 100 )
+    love.graphics.line(0,h,w,h)
+    love.graphics.setColor(1,1,1)
+
+    if( gameState.gameOver ) then
+        drawGameOver(gameDimensions, gameState)
+    end
+end
+
 function drawPngAtBox( O_Or_X, playerImages, boundingBox )
 
     -- Compute the width and height of the bounding box.
@@ -57,8 +122,8 @@ function drawGameOver(gameDimensions, gameState)
 
     local bbs = gameDimensions.bbs
 
-    local sh  = gameDimensions.sh
-    local gw  = gameDimensions.gw
+    local sh  = gameDimensions.sh + gameDimensions.tsHOffset
+    local gw  = gameDimensions.gw + gameDimensions.tsWOffset
     if gameState.gameTied then
         love.graphics.print("TIE GAME"                                  , gw/2, sh - 35)
         love.graphics.print("Play Again?"                               , gw/2, sh - 25)
@@ -77,69 +142,15 @@ function drawGameOver(gameDimensions, gameState)
     end
 end
 
-function drawStatusScreen( gameDimensions, gameState )
 
-    local h = gameDimensions.sh
-    local w = gameDimensions.sw
 
-    love.graphics.rectangle("fill", 
-                            gameDimensions.tsWOffset,
-                            gameDimensions.tsHOffset,
-                            gameDimensions.tsW,
-                            gameDimensions.tsH)
-
-    -- Draw currentPlayer turn.
-    love.graphics.setColor(0,0,1)
-    love.graphics.print("Current player: " .. gameState.currentPlayer .. " (" .. gameState.playerSymbol[gameState.currentPlayer] .. ")", 0,0)
-
-    love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], 0, 85 )
-    love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], 0, 100 )
-    love.graphics.line(0,h,w,h)
-    love.graphics.setColor(1,1,1)
-
-end
-
-function drawGameScreen( gameDimensions, gameState )
-
-    local h = gameDimensions.bbH or love.graphics.getHeight()
-    local w = gameDimensions.bbW or love.graphics.getWidth()
-    local hOffset = gameDimensions.bbHOffset or 0
-    local wOffset = gameDimensions.bbWOffset or 0 
-
-    -- The two vertical lines.
-    love.graphics.line(w/3   + wOffset, hOffset , w/3   + wOffset, h     + hOffset)
-    love.graphics.line(2*w/3 + wOffset, hOffset , 2*w/3 + wOffset, h     + hOffset)
-
-    -- The two horizontal lines.
-    love.graphics.line(0     + wOffset, h/3   + hOffset, w + wOffset,     h/3   + hOffset)
-    love.graphics.line(0     + wOffset, 2*h/3 + hOffset, w + wOffset,     2*h/3 + hOffset)
-
-    -- Iterate over the game state and draw a circle or X depending on the state.
-    for i = 1,9 do
-        --drawAtBox(gameDimensions.bbs[i], gameState.boardState[i])
-        drawPngAtBox(gameState.boardState[i], gameState.playerImages.image, gameDimensions.bbs[i])
-    end
-end
 
 function updateCursor(gameState)
         love.mouse.setCursor(gameState.playerCursor[gameState.currentPlayer])
 end
 
 
-function drawClouds(gameState)
 
-    for i = 1, #gameState.clouds do
-
-        gameState.clouds[i]:draw()
-    end
-
-end
-
-function drawBorder(gameDimensions, gameState)
-    local hScale = gameDimensions.heightScale 
-    local wScale = gameDimensions.widthScale 
-    love.graphics.draw(gameState.border, 0,0,0, wScale,hScale)
-end
 -----------------------------------------------------------------------------------------
 -- No longer needed!
 -- Draw an X or an O at the clicked bounding box.

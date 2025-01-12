@@ -105,17 +105,8 @@ end
 
 function tictactoe()
 
-    local gd = gameDimensions
     updateCursor(gameState)
-
-    drawClouds(gameState)
     
     drawGameScreen(gameDimensions, gameState)
-    drawBorder(gameDimensions, gameState)
-    drawStatusScreen(gameDimensions, gameState)
-
-    if gameState.gameOver then
-        drawGameOver(gameDimensions, gameState)
-    end
 end
 
