@@ -13,14 +13,14 @@ function love.load(arg)
     love.graphics.setDefaultFilter("nearest","nearest")
     
 
-    local oCursor = love.mouse.newCursor("sprites/blueO.png",16,16)
-    local xCursor = love.mouse.newCursor("sprites/pinkX.png",16,16)
+    local oCursor = love.mouse.newCursor("sprites/BlueO.png",16,16)
+    local xCursor = love.mouse.newCursor("sprites/PinkX.png",16,16)
 
-    local oImage  = love.graphics.newImage("sprites/blueO.png")
-    local xImage  = love.graphics.newImage("sprites/pinkX.png")
+    local oImage  = love.graphics.newImage("sprites/BlueO.png")
+    local xImage  = love.graphics.newImage("sprites/PinkX.png")
 
-    local oImageHighlighted  = love.graphics.newImage("sprites/blueOHighlighted.png")
-    local xImageHighlighted  = love.graphics.newImage("sprites/pinkXHighlighted.png")
+    local oImageHighlighted  = love.graphics.newImage("sprites/BlueOHighlighted.png")
+    local xImageHighlighted  = love.graphics.newImage("sprites/PinkXHighlighted.png")
 
     local border         = love.graphics.newImage("sprites/Border.png")
 
@@ -109,10 +109,10 @@ function tictactoe()
     updateCursor(gameState)
 
     drawClouds(gameState)
-    drawBorder(gameDimensions, gameState)
     
-    drawStatusScreen(gameDimensions, gameState)
     drawGameScreen(gameDimensions, gameState)
+    drawBorder(gameDimensions, gameState)
+    drawStatusScreen(gameDimensions, gameState)
 
     if gameState.gameOver then
         drawGameOver(gameDimensions, gameState)

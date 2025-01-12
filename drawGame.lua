@@ -40,9 +40,14 @@ function drawPngAtBox( O_Or_X, playerImages, boundingBox )
         -- Compute the scale factor required to fit the image in the bounding box.
         -- Shrink the scale factor a little so the shapes are not touching the border of
         -- the bounding box.
-        local twiddleFactor = 1.0
-        local wScale = (sideLength / w) * twiddleFactor
-        local hScale = (sideLength / h) * twiddleFactor
+        -- This will take the ratio of one pixel to the total size of the image width.
+        -- This will effectively remove 1 pixel from each side when applied to the scale factor
+        -- The images are squre so we don't really need two scale factors and two twiddle factors.
+        local twiddleFactorW = (w - 1) / w
+        local twiddleFactorH = (h - 1) / h
+
+        local wScale = (sideLength / w) * twiddleFactorW
+        local hScale = (sideLength / h) * twiddleFactorH
 
         love.graphics.draw(playerImages[O_Or_X],x,y, 0, wScale, hScale, xOffset, yOffset) 
     end

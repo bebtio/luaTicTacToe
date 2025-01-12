@@ -7,14 +7,23 @@
  - [x] Custom O symbol : 1.2.0
  - [x] Highlight X and O when a win occurs.
  - [x] Floating background
- - [ ] Create a colorful border around the whole screen.
-  - [ ] If I want to make the pixel art in scale with the x's and o's I can make the border
+ - [x] Create a colorful border around the whole screen. 1.6.0
+  - [x] If I want to make the pixel art in scale with the x's and o's I can make the border
         in 96x96 pixels for the whole screen.
         The status window is 24x96 and the game window is 72x96 
- - [ ] Custom boxes
+ - [ ] Add play again button.
+ - [ ] Title screen with custom pixel art?
+ - [ ] Custom boxes?
  - [ ] Animate the X and O?
 
 - [x] Make so that the screen is resizable and everything scales correctly.
+
+
+### [1.6.0] 2024-01-11
+
+- Updated the x and o sprites.
+- Fixed the scaling logic.
+- Added border png.
 
 ### [1.5.1] 2024-01-09
 
