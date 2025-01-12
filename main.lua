@@ -104,9 +104,7 @@ function love.draw()
 end
 
 function tictactoe()
-
     updateCursor(gameState)
-    
     drawGameScreen(gameDimensions, gameState)
 end
 

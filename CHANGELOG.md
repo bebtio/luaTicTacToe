@@ -19,6 +19,10 @@
 - [x] Make so that the screen is resizable and everything scales correctly.
 
 
+### [1.6.1] 2024-01-11
+
+- Fixed the location of the font.
+
 ### [1.6.0] 2024-01-11
 
 - Updated the x and o sprites.
