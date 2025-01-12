@@ -41,8 +41,11 @@ end
 
 function drawStatusScreen( gameDimensions, gameState )
 
-    local h = gameDimensions.sh
-    local w = gameDimensions.sw
+    local h    = gameDimensions.tsH
+    local w    = gameDimensions.tsW
+    local hOff = gameDimensions.tsHOffset - 4
+    local wOff = gameDimensions.tsWOffset
+    local textSeparation = h / 3.0
 
     love.graphics.rectangle("fill", 
                             gameDimensions.tsWOffset,
@@ -51,13 +54,13 @@ function drawStatusScreen( gameDimensions, gameState )
                             gameDimensions.tsH)
 
     -- Draw currentPlayer turn.
-    love.graphics.setColor(0,0,1)
+    love.graphics.setColor(0,0,0)
     love.graphics.print("Current player: " .. gameState.currentPlayer .. " (" .. gameState.playerSymbol[gameState.currentPlayer] .. ")",
-                        gameDimensions.tsWOffset,
-                        gameDimensions.tsHOffset)
+                        wOff + 1,
+                        hOff - 1)
 
-    love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], gameDimensions.tsWOffset, gameDimensions.tsHOffset + 15)
-    love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], gameDimensions.tsWOffset, gameDimensions.tsHOffset + 30)
+    love.graphics.print("Player 1 Score: " .. gameState.playerScore["1"], wOff + 1, hOff + textSeparation    )
+    love.graphics.print("Player 2 Score: " .. gameState.playerScore["2"], wOff + 1, hOff + textSeparation * 2)
     love.graphics.setColor(1,1,1)
     if( gameState.gameOver ) then
         drawGameOver(gameDimensions, gameState)
@@ -66,23 +69,29 @@ end
 
 function drawGameOver(gameDimensions, gameState)
 
-    love.graphics.setColor(0,0,1)
+    love.graphics.setColor(0,0,0)
+
+    local h    = gameDimensions.tsH
+    local w    = gameDimensions.tsW
+    local hOff = gameDimensions.tsHOffset - 4
+    local wOff = gameDimensions.tsWOffset
+    local textSeparation = h / 3.0
+
     local bbs = gameDimensions.bbs
 
     local sh  = gameDimensions.tsHOffset
     local gw  = gameDimensions.tsW + gameDimensions.tsWOffset
     if gameState.gameTied then
-        love.graphics.print("TIE GAME"                                            , gw - 80, sh      )
-        love.graphics.print("Play Again?"                                         , gw - 80, sh + 15 )
-        love.graphics.print("Y/N"                                                 , gw - 80, sh + 30 )
+        love.graphics.print("TIE GAME"                                            , w - 120, hOff                      )
+        love.graphics.print("Play Again?"                                         , w - 120, hOff + textSeparation     )
+        love.graphics.print("Y/N"                                                 , w - 120, hOff + textSeparation * 2 )
     else    
-        love.graphics.print("GAME OVER"                                           , gw - 80, sh      )
-        love.graphics.print("Player" .. " " .. gameState.currentPlayer .. " wins!", gw - 80, sh + 15 )
-        love.graphics.print("Play Again?"                                         , gw - 80, sh + 30 )
-        love.graphics.print("y/n"                                                 , gw - 80, sh + 45 )
+        love.graphics.print("Player" .. " " .. gameState.currentPlayer .. " wins!", w - 120, hOff                      )
+        love.graphics.print("Play Again?"                                         , w - 120, hOff + textSeparation     )
+        love.graphics.print("y/n"                                                 , w - 120, hOff + textSeparation * 2 )
     end
-
     love.graphics.setColor(1,1,1)
+
     for index, value in ipairs(gameState.winningSequence) do
         --drawAtBox(bbs[value], gameState.boardState[value], color)
         drawPngAtBox(gameState.boardState[value], gameState.playerImages.highlightedImage, bbs[value])

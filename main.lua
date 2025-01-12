@@ -1,16 +1,19 @@
 require("gameState")
 require("drawGame")
-local Entity = require("entity")
+require("entity")
 
 local gameState
 local gameDimensions
 
 function love.load(arg)
+    love.graphics.setDefaultFilter("nearest","nearest")
+    font = love.graphics.newFont("monogram.ttf", 28)
+    love.graphics.setFont(font)
+
     local r,g,b = love.math.colorFromBytes(132, 193, 238)
     love.graphics.setBackgroundColor(r,g,b,0)
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
-    love.graphics.setDefaultFilter("nearest","nearest")
     
 
     local oCursor = love.mouse.newCursor("sprites/BlueO.png",16,16)
