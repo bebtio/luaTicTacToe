@@ -47,11 +47,14 @@ function drawStatusScreen( gameDimensions, gameState )
     local wOff = gameDimensions.tsWOffset
     local textSeparation = h / 3.0
 
+    local bColor = gameState.statusBackground
+    love.graphics.setColor( bColor.r, bColor.g, bColor.b )
     love.graphics.rectangle("fill", 
                             gameDimensions.tsWOffset,
                             gameDimensions.tsHOffset,
                             gameDimensions.tsW,
                             gameDimensions.tsH)
+    love.graphics.setColor(1,1,1)
 
     -- Draw currentPlayer turn.
     love.graphics.setColor(0,0,0)

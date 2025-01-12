@@ -19,6 +19,10 @@
 - [x] Make so that the screen is resizable and everything scales correctly.
 
 
+### [1.7.1] 2024-01-11
+
+- Changed the status screen background color to a very light blue.
+
 ### [1.7.0] 2024-01-11
 
 - Added custom font from: [datagoblin](https://datagoblin.itch.io/monogram/download/eyJleHBpcmVzIjoxNzM2NjQ2MzgxLCJpZCI6Njc2Njh9%2e3SibEGSQtuPTrqB%2bc18tAzxJe7o%3d)

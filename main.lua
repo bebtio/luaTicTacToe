@@ -12,6 +12,9 @@ function love.load(arg)
 
     local r,g,b = love.math.colorFromBytes(132, 193, 238)
     love.graphics.setBackgroundColor(r,g,b,0)
+
+    r,g,b = love.math.colorFromBytes(224, 242, 252)
+    local statusBackground = {r = r, g = g, b = b}
     if arg[#arg] == "-debug" then require("mobdebug").start() end
   
     
@@ -49,6 +52,8 @@ function love.load(arg)
         playerCursor = {["1"] = xCursor, ["2"] = oCursor},
         playerImages = playerImages,
         
+        statusBackground = statusBackground,
+
         -- Tracks the winning sequence indices so we can highlight it in a different color.
         winningSequence = {},
 
